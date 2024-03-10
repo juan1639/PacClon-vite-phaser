@@ -10,7 +10,7 @@ export class MainMenu extends Scene
 {
     constructor ()
     {
-        super('MenuPrincipal');
+        super('MainMenu');
     }
 
     init()
@@ -62,7 +62,10 @@ export class MainMenu extends Scene
             {
               at: aparecerBoton,
               run: () => {
-                this.botoninicio.create('game');
+                this.botoninicio.create(
+                    'game', [coorXY[0], Math.floor(this.sys.game.config.height / 1.5)]
+                );
+
                 this.botonsettings.create('game');
 
                 particulas(

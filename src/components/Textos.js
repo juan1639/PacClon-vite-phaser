@@ -12,8 +12,8 @@ export class Textos
     {
         const excepciones = Settings.getBonusCerezas().concat(Settings.getFantasmasBonusInc().puntos);
         const excepcionesString = excepciones.map(excepcion => excepcion.toString());
-        excepcionesString.push(' Enhorabuena! ');
-        excepcionesString.push(' Nivel Superado! ');
+        excepcionesString.push(' Congratulations! ');
+        excepcionesString.push(' Level Up! ');
         console.log(excepcionesString);
 
         const {
@@ -47,10 +47,10 @@ export class Textos
 
     decremento_alpha(txt, excepcionesString)
     {
-        if (excepcionesString.includes(txt) && txt !== ' Enhorabuena! ')
+        if (excepcionesString.includes(txt) && txt !== ' Congratulations! ')
         {
             this.relatedScene.tweens.add({
-                targets: txt,
+                targets: this.texto,
                 alpha: 0,
                 ease: 'Sine.easeInOut',
                 duration: Settings.getFantasmasBonusInc().duracion
@@ -60,7 +60,7 @@ export class Textos
 
     elastic(txt, elastic, dura)
     {
-        if (txt === ' Pac Clon ')
+        if (dura > 0)
         {
             this.relatedScene.tweens.add({
                 targets: this.texto,

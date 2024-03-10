@@ -7,13 +7,14 @@ export class BotonNuevaPartida
     this.relatedScene = scene;
   }
 
-  create(siguienteScene)
+  create(siguienteScene, coorXY)
   {
     const ancho = this.relatedScene.sys.game.config.width;
     const alto = this.relatedScene.sys.game.config.height;
+
     const botonCondicional = Settings.getNivel() > 1 ? 'boton-continuar' : 'boton-nueva-partida';
 
-    this.boton = this.relatedScene.add.sprite(Math.floor(ancho / 2), Math.floor(alto / 1.5), botonCondicional).setInteractive();
+    this.boton = this.relatedScene.add.sprite(coorXY[0], coorXY[1], botonCondicional).setInteractive();
     this.boton.setScale(0.6);
     this.boton.setAngle(1);
     this.boton.setTint(new Phaser.Display.Color(255, 255, 105).color);

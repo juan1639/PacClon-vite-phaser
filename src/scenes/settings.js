@@ -19,6 +19,8 @@ export class Settings
     static vidas = 3;
     static gameOver = false;
 
+    static txtScore = ' Score: ';
+
     static pausa = {
         inicial: 4300,
         pacmanDies: 3100,
@@ -76,11 +78,11 @@ export class Settings
 
     static cameraControles = {
         x: 0,
-        y: 370,
+        y: 300,
         ancho: 800,
-        alto: 280,
+        alto: 290,
         scrollX: 0,
-        scrollY: 1265
+        scrollY: 1250
     };
 
     static cameraScores = {
@@ -125,116 +127,147 @@ export class Settings
     ];
 
     // ------- Getters ---------
-    static getPuntos() {
+    static getPuntos()
+    {
         return Settings.puntos;
     }
 
-    static getNivel() {
+    static getNivel()
+    {
         return Settings.nivel;
     }
 
-    static getRecord() {
+    static getRecord()
+    {
         return Settings.hi;
     }
 
-    static getVidas() {
+    static getVidas()
+    {
         return Settings.vidas;
     }
 
-    static isFantasmasScary() {
+    static getTxtScore()
+    {
+        return Settings.txtScore;
+    }
+
+    static isFantasmasScary()
+    {
         return Settings.fantasmasScary.activo;
     }
 
-    static getFantasmasScaryDuracion() {
+    static getFantasmasScaryDuracion()
+    {
         return Settings.fantasmasScary.duracion;
     }
 
-    static getFantasmasBonusInc() {
+    static getFantasmasBonusInc()
+    {
         return Settings.fantasmasBonusInc;
     }
 
-    static isGameOver() {
+    static isGameOver()
+    {
         return Settings.gameOver;
     }
 
-    static isBotonesYcruceta() {
+    static isBotonesYcruceta()
+    {
         return Settings.botonesYcruceta;
     }
 
-    static getCerezasIniXY() {
+    static getCerezasIniXY()
+    {
         return Settings.cerezasIniXY;
     }
 
-    static getBonusCerezas() {
+    static getBonusCerezas()
+    {
         return Settings.bonusCerezas;
     }
 
-    static getCoorCruceta() {
+    static getCoorCruceta()
+    {
         return Settings.coorCruceta;
     }
 
-    static getScreen() {
+    static getScreen()
+    {
         return Settings.screen;
     }
 
-    static getDepth() {
+    static getDepth()
+    {
         return Settings.depth;
     }
 
-    static getCameraControles() {
+    static getCameraControles()
+    {
         return Settings.cameraControles;
     }
 
-    static getCameraScores() {
+    static getCameraScores()
+    {
         return Settings.cameraScores;
     }
 
     // ------- Setters ---------
-    static setPuntos(ptos) {
+    static setPuntos(ptos)
+    {
         Settings.puntos = ptos;
     }
 
-    static setNivel(level) {
+    static setNivel(level)
+    {
         Settings.nivel = level;
     }
 
-    static setRecord(hiScore) {
+    static setRecord(hiScore)
+    {
         Settings.hi = hiScore;
     }
 
-    static setVidas(lifes) {
+    static setVidas(lifes)
+    {
         Settings.vidas = lifes;
     }
     
-    static setFantasmasScary(bool) {
+    static setFantasmasScary(bool)
+    {
         Settings.fantasmasScary.activo = bool;
     }
 
-    static setFantasmasScaryDuracion(tiempo) {
+    static setFantasmasScaryDuracion(tiempo)
+    {
         Settings.fantasmasScary.duracion = tiempo;
     }
 
-    static setFantasmasBonusInc(valor) {
+    static setFantasmasBonusInc(valor)
+    {
         Settings.fantasmasBonusInc.contador = valor;
     }
 
-    static setGameOver(bool) {
+    static setGameOver(bool)
+    {
         Settings.gameOver = bool;
     }
 
-    static setBotonesYcruceta(bool) {
+    static setBotonesYcruceta(bool)
+    {
         Settings.botonesYcruceta = bool;
     }
 
-    static setScreen(w, h, bx, by) {
+    static setScreen(w, h, bx, by)
+    {
         Settings.screen.width = w;
         Settings.screen.height = h;
         Settings.screen.escBoundsX = bx;
         Settings.screen.escBoundsY = by;
     }
 
-    static setDepth(fondo, puntitos, pared, item, jugador, fantasmas, textos) {
-        
+    static setDepth(fondo, puntitos, pared, item, jugador, fantasmas, textos)
+    {
         Settings.depth.fondo = fondo;
         Settings.depth.puntitos = puntitos;
         Settings.depth.pared = pared;
