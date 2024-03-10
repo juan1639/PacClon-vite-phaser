@@ -21,7 +21,8 @@ export class Textos
             size, color, style,
             stroke, sizeStroke,
             shadowOsx, shadowOsy, shadowColor,
-            bool1, bool2, origin
+            bool1, bool2, origin,
+            elastic, dura
         } = this.datos;
 
         this.texto = this.relatedScene.add.text(x, y, txt, {
@@ -38,17 +39,36 @@ export class Textos
 
         // if (!excepcionesString.includes(txt)) this.texto.setX(centrar_txt(this.texto, args[12] * args[13]));
 
+        this.decremento_alpha(txt, excepcionesString);
+        this.elastic(txt, elastic, dura);
+
+        console.log(this.texto);
+    }
+
+    decremento_alpha(txt, excepcionesString)
+    {
         if (excepcionesString.includes(txt) && txt !== ' Enhorabuena! ')
         {
-            relatedScene.tweens.add({
+            this.relatedScene.tweens.add({
                 targets: txt,
                 alpha: 0,
                 ease: 'Sine.easeInOut',
                 duration: Settings.getFantasmasBonusInc().duracion
             });
         }
+    }
 
-        console.log(this.texto);
+    elastic(txt, elastic, dura)
+    {
+        if (txt === ' Pac Clon ')
+        {
+            this.relatedScene.tweens.add({
+                targets: this.texto,
+                y: elastic,
+                ease: 'Elastic',
+                duration: dura
+            });
+        }
     }
 
     get()

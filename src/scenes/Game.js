@@ -4,7 +4,7 @@ export class Game extends Scene
 {
     constructor ()
     {
-        super('Game');
+        super('game');
     }
 
     create ()

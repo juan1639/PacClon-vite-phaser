@@ -17,13 +17,15 @@ export class Boot extends Scene
             size: 50, color: '#fff', style: 'bold',
             stroke: '#ee9011', sizeStroke: 16,
             shadowOsx: 2, shadowOsy: 2, shadowColor: '#111111',
-            bool1: false, bool2: true, origin: [0.5, 0.5]
+            bool1: false, bool2: true, origin: [0.5, 0.5],
+            elastic: false, dura: 0
         });
     }
 
     preload ()
     {
         this.load.image('background', 'assets/bg.png');
+        this.load.image('fondo', 'assets/fondo_pacmanPh.png');
     }
 
     create ()
@@ -31,7 +33,7 @@ export class Boot extends Scene
         this.add.image(0, 0, 'background').setOrigin(0, 0);
         this.txt.create();
         
-        this.input.on('pointerdown', () => this.scene.start('menuprincipal'));
+        this.input.on('pointerdown', () => this.scene.start('Preloader'));
 
         console.log(this.txt);
     }
