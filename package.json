@@ -16,9 +16,12 @@
     "homepage": "https://github.com/phaserjs/template-vite#readme",
     "scripts": {
         "dev": "vite --config vite/config.dev.mjs",
-        "build": "vite build --config vite/config.prod.mjs"
+        "build": "vite build --config vite/config.prod.mjs",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d dist"
     },
     "devDependencies": {
+        "gh-pages": "^6.1.1",
         "terser": "^5.28.1",
         "vite": "^5.1.4"
     },

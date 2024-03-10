@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { Textos } from '../components/Textos.js';
 
 export class Boot extends Scene
 {
@@ -7,16 +8,31 @@ export class Boot extends Scene
         super('Boot');
     }
 
+    init()
+    {
+        this.txt = new Textos(this, {
+            x: Math.floor(this.sys.game.config.width / 2),
+            y: Math.floor(this.sys.game.config.height / 2),
+            txt: ' Toque pantalla o haga \n click para comenzar... ',
+            size: 50, color: '#fff', style: 'bold',
+            stroke: '#ee9011', sizeStroke: 16,
+            shadowOsx: 2, shadowOsy: 2, shadowColor: '#111111',
+            bool1: false, bool2: true, origin: [0.5, 0.5]
+        });
+    }
+
     preload ()
     {
-        //  The Boot Scene is typically used to load in any assets you require for your Preloader, such as a game logo or background.
-        //  The smaller the file size of the assets, the better, as the Boot Scene itself has no preloader.
-
         this.load.image('background', 'assets/bg.png');
     }
 
     create ()
     {
-        this.scene.start('Preloader');
+        this.add.image(0, 0, 'background').setOrigin(0, 0);
+        this.txt.create();
+        
+        this.input.on('pointerdown', () => this.scene.start('menuprincipal'));
+
+        console.log(this.txt);
     }
 }
