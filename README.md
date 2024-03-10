@@ -1,3 +1,9 @@
+Recreación del juego clásico arcade Pacman de 1980, usando la librería Phaser.
+
+https://juan1639.github.io/PacClon-vite-phaser
+
+<img src="./public/miniatura-pacClon-phaser-pre.png"/>
+
 # Phaser Vite Template
 
 This is a Phaser 3 project template that uses Vite for bundling. It supports hot-reloading for quick development workflow and includes scripts to generate production-ready builds.
