@@ -61,7 +61,7 @@ export class GameOver
 
       Settings.setRecord(Settings.getPuntos());
 
-      this.txtnewrecord = new Textos(this, {
+      this.txtnewrecord = new Textos(this.relatedScene, {
         x: Math.floor(this.relatedScene.sys.game.config.width / 2),
         y: Math.floor(this.relatedScene.sys.game.config.height / 3),
         txt: ' Enhorabuena! \n Nuevo Record! ',

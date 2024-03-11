@@ -17,6 +17,9 @@ import { CrucetaDireccion, IconoGamePad } from '../components/botonycruceta.js';
 import { GameOver } from '../components/game-over.js';
 
 import {
+  overlapComePuntitos,
+  overlapComePuntitogordo,
+  exceptoScary,
   play_sonidos,
   restar_vida,
   suma_puntos
@@ -171,47 +174,11 @@ export class Game extends Phaser.Scene
   crear_colliders()
   {
     //Overlap Jugador-Puntitos
-    this.physics.add.overlap(this.jugador.get(), this.puntito.get(), (jugador, puntito) =>
-    {
-      suma_puntos(puntito);
-      this.marcadorPtos.update(Settings.getTxtScore(), Settings.getPuntos());
-      puntito.disableBody(true, true);
-      play_sonidos(this.sonido_waka, false, 0.9);
-    });
-
+    this.physics.add.overlap(this.jugador.get(), this.puntito.get(), overlapComePuntitos, null, this);
+    
     //Overlap Jugador-PuntitosGordos
-    this.physics.add.overlap(this.jugador.get(), this.puntitogordo.get(), (jugador, puntitogordo) => {
-
-      suma_puntos(puntitogordo);
-      this.marcadorPtos.update(Settings.getTxtScore(), Settings.getPuntos());
-
-      puntitogordo.disableBody(true, true);
-      Settings.setFantasmasScary(true);
-
-      setTimeout(() => {
-        Settings.setFantasmasScary(false);
-        Settings.setFantasmasIntermitente(false);
-        this.fantasmas.clear_tint();
-        this.fantasmas.get().setBlendMode('ERASE');
-        this.sonido_fantasmasScary.pause();
-        Settings.setFantasmasBonusInc(0);
-
-      }, this.fantasmas.duracion_scary());
-
-      setTimeout(() => {
-        Settings.setFantasmasIntermitente(true);
-
-      }, Math.floor(this.fantasmas.duracion_scary() / 1.5));
-
-      play_sonidos(this.sonido_eatingGhost, false, 0.9);
-      setTimeout(() => play_sonidos(this.sonido_fantasmasScary, true, 0.9), 500);
-
-    }, () => {
-
-      if (Settings.isFantasmasScary()) return false;
-      return true;
-    });
-
+    this.physics.add.overlap(this.jugador.get(), this.puntitogordo.get(), overlapComePuntitogordo, exceptoScary, this);
+    
     //Overlap Jugador-Fantasmas
     this.physics.add.overlap(this.jugador.get(), this.fantasmas.get(), (jugador, fantasma) => {
 
