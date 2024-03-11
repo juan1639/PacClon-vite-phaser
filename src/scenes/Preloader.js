@@ -18,7 +18,7 @@ export class Preloader extends Scene
         this.txt = new Textos(this, {
             x: Math.floor(widthScreen / 2),
             y: Math.floor(heightScreen / 4),
-            txt: ' Cargando... ',
+            txt: ' Loading... ',
             size: 50, color: '#ffa', style: 'bold',
             stroke: '', sizeStroke: 0,
             shadowOsx: 0, shadowOsy: 0, shadowColor: '#111111',

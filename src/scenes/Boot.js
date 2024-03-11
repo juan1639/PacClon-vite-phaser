@@ -13,7 +13,7 @@ export class Boot extends Scene
         this.txt = new Textos(this, {
             x: Math.floor(this.sys.game.config.width / 2),
             y: Math.floor(this.sys.game.config.height / 2),
-            txt: ' Toque pantalla o haga \n click para comenzar... ',
+            txt: ' Touch Screen or \n click to start... ',
             size: 50, color: '#fff', style: 'bold',
             stroke: '#ee9011', sizeStroke: 16,
             shadowOsx: 2, shadowOsy: 2, shadowColor: '#111111',
