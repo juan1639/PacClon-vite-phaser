@@ -46,7 +46,8 @@ export class Cerezas
             this.cerezas.setData('puntos', 7000);
         }
 
-        this.relatedScene.tweens.add({
+        this.relatedScene.tweens.add(
+        {
             targets: this.cerezas,
             angle: 20,
             ease: 'linear',
@@ -72,8 +73,8 @@ export class Cerezas
             (this.cerezas.y + direcc[this.cerezas.getData('direccion')][1] +
                 Settings.tileXY.y * direcc[this.cerezas.getData('direccion')][3]) / Settings.tileXY.y);
         
-        if (!Laberinto.check_colision(x, y)) {
-
+        if (!Laberinto.check_colision(x, y))
+        {
             this.cerezas.x += direcc[this.cerezas.getData('direccion')][0] * Cerezas.VEL;
             this.cerezas.y += direcc[this.cerezas.getData('direccion')][1] * Cerezas.VEL;
 
@@ -81,8 +82,8 @@ export class Cerezas
             if (this.cerezas.x > Laberinto.array_laberinto[0].length * Settings.tileXY.x && this.cerezas.getData('direccion') === 'right') this.cerezas.x = -Settings.tileXY.x;
             if (this.cerezas.x < -Settings.tileXY.x && this.cerezas.getData('direccion') === 'left') this.cerezas.x = (Laberinto.array_laberinto[0].length - 1) * Settings.tileXY.x;
 
-        } else {
-            
+        } else
+        {
             this.cerezas.setData('direccion', this.elegir_otra_direccion(direcc, this.cerezas));
         }
     }

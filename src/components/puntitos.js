@@ -19,8 +19,8 @@ export class Puntitos
             {
                 const valor = Laberinto.array_laberinto[i][ii];
 
-                if (valor === 1) {
-                    
+                if (valor === 1)
+                {
                     this.puntito.create(
                         ii * Settings.tileXY.x, i * Settings.tileXY.y, 'puntito'
                     ).setScale(0.25).setData('puntos', 10).refreshBody();
@@ -55,14 +55,16 @@ export class PuntitosGordos
             {
                 const valor = Laberinto.array_laberinto[i][ii];
 
-                if (valor === 5) {
+                if (valor === 5)
+                {
                     this.puntitosgordos.create(ii * Settings.tileXY.x, i * Settings.tileXY.y, 'puntito')
                         .setData('puntos', 50).setScale(1.6).refreshBody();
                 }
             }
         }
 
-        this.relatedScene.tweens.add({
+        this.relatedScene.tweens.add(
+        {
             targets: this.puntitosgordos.getChildren(),
             scale: 0.8,
             tint: new Phaser.Display.Color(255, Phaser.Math.Between(150, 255), 255).color,
@@ -71,8 +73,8 @@ export class PuntitosGordos
             repeat: -1
         });
 
-        this.puntitosgordos.children.iterate(gordo => {
-
+        this.puntitosgordos.children.iterate(gordo =>
+        {
             particulas(
                 gordo.x, gordo.y,
                 'sparkle',

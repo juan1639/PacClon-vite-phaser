@@ -33,7 +33,8 @@ export class Jugador
 
         this.relatedScene.anims.remove('le-ri-up-do');
 
-        this.relatedScene.anims.create({
+        this.relatedScene.anims.create(
+        {
             key: 'le-ri-up-do', 
             frames: this.relatedScene.anims.generateFrameNumbers('pacman', {start: 0, end: 6}),
             frameRate: 30,
@@ -41,7 +42,8 @@ export class Jugador
             repeat: -1
         });
 
-        this.relatedScene.anims.create({
+        this.relatedScene.anims.create(
+        {
             key: 'turn',
             frames: [{key: 'pacman', frame: 0}],
             frameRate: 20,
@@ -60,33 +62,39 @@ export class Jugador
 
         const direcc = Jugador.INFO_DIRECCION;
 
-        Object.keys(Jugador.INFO_DIRECCION).forEach(tecla => {
+        Object.keys(Jugador.INFO_DIRECCION).forEach(tecla =>
+        {
             
             if (this.controles[tecla].isDown) this.intentoGiro = tecla;
 
-            if (Settings.isBotonesYcruceta()) {
-
-                if (this.relatedScene.crucetaup.isDown) {
+            if (Settings.isBotonesYcruceta())
+            {
+                if (this.relatedScene.crucetaup.isDown)
+                {
                     this.intentoGiro = 'up';
 
-                } else if (this.relatedScene.crucetadown.isDown) {
+                } else if (this.relatedScene.crucetadown.isDown)
+                {
                     this.intentoGiro = 'down';
 
-                } else if (this.relatedScene.crucetaleft.isDown) {
+                } else if (this.relatedScene.crucetaleft.isDown)
+                {
                     this.intentoGiro = 'left';
 
-                } else if (this.relatedScene.crucetaright.isDown) {
+                } else if (this.relatedScene.crucetaright.isDown)
+                {
                     this.intentoGiro = 'right';
                 }
             }
         });
 
-        if (this.jugador.x % Settings.tileXY.x === 0 && this.jugador.y % Settings.tileXY.y === 0) {
-            
+        if (this.jugador.x % Settings.tileXY.x === 0 && this.jugador.y % Settings.tileXY.y === 0)
+        {
             const x = Math.floor(this.jugador.x / Settings.tileXY.x) + direcc[this.intentoGiro][0];
             const y = Math.floor(this.jugador.y / Settings.tileXY.y) + direcc[this.intentoGiro][1];
             
-            if (Laberinto.array_laberinto[y][x] !== 9) {
+            if (Laberinto.array_laberinto[y][x] !== 9)
+            {
                 this.direccion = this.intentoGiro;
                 this.jugador.setAngle(direcc[this.direccion][4]);
             }
@@ -100,8 +108,8 @@ export class Jugador
         const x = Math.floor((this.jugador.x + offsetX + ancho) / Settings.tileXY.x);
         const y = Math.floor((this.jugador.y + offsetY + alto) / Settings.tileXY.y);
 
-        if (Laberinto.array_laberinto[y][x] !== 9) {
-
+        if (Laberinto.array_laberinto[y][x] !== 9)
+        {
             this.jugador.x += direcc[this.direccion][0] * Jugador.VEL;
             this.jugador.y += direcc[this.direccion][1] * Jugador.VEL;
 
@@ -133,7 +141,8 @@ export class JugadorDies
 
         this.jugadordies.setFrame(4);
 
-        this.relatedScene.tweens.add({
+        this.relatedScene.tweens.add(
+        {
             targets: this.jugadordies,
             angle: 359,
             duration: 1000,
@@ -162,7 +171,8 @@ export class JugadorShowVidas
     {
         const { left, top } = this.args;
 
-        this.jugadorshowvidas = this.relatedScene.physics.add.group({
+        this.jugadorshowvidas = this.relatedScene.physics.add.group(
+        {
             key: ['pacman'],
             frameQuantity: Settings.getVidas(),
             setXY: {
@@ -173,7 +183,8 @@ export class JugadorShowVidas
             frame: 4
         });
 
-        this.jugadorshowvidas.children.iterate(vida => {
+        this.jugadorshowvidas.children.iterate(vida =>
+        {
             vida.setOrigin(0.5, 0).setScale(1, 0.7).setBlendMode(Phaser.BlendModes.ADD);
         });
 
@@ -200,7 +211,8 @@ export class JugadorPreGame
 
         this.jugadorpregame.setAngle(0);
 
-        this.relatedScene.anims.create({
+        this.relatedScene.anims.create(
+        {
             key: 'le-ri-up-do', 
             frames: this.relatedScene.anims.generateFrameNumbers('pacman', {start: 0, end: 6}),
             frameRate: 30,
@@ -212,7 +224,8 @@ export class JugadorPreGame
 
         const duracionTotal = 8000;
 
-        this.relatedScene.tweens.add({
+        this.relatedScene.tweens.add(
+        {
             targets: this.jugadorpregame,
             x: this.relatedScene.sys.game.config.width + Settings.tileXY.x * 2,
             yoyo: true,
