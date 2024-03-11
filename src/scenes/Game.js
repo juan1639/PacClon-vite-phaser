@@ -190,11 +190,18 @@ export class Game extends Phaser.Scene
 
       setTimeout(() => {
         Settings.setFantasmasScary(false);
+        Settings.setFantasmasIntermitente(false);
         this.fantasmas.clear_tint();
+        this.fantasmas.get().setBlendMode('ERASE');
         this.sonido_fantasmasScary.pause();
         Settings.setFantasmasBonusInc(0);
 
       }, this.fantasmas.duracion_scary());
+
+      setTimeout(() => {
+        Settings.setFantasmasIntermitente(true);
+
+      }, Math.floor(this.fantasmas.duracion_scary() / 1.5));
 
       play_sonidos(this.sonido_eatingGhost, false, 0.9);
       setTimeout(() => play_sonidos(this.sonido_fantasmasScary, true, 0.9), 500);

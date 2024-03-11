@@ -89,8 +89,15 @@ export class Fantasma
 
         this.fantasmas.children.iterate((fant, index) => {
 
-            if (Settings.isFantasmasScary()) {
-                fant.setTint(new Phaser.Display.Color(0, Phaser.Math.Between(60, 200), Phaser.Math.Between(60, 255)).color);
+            if (Settings.isFantasmasScary())
+            {
+                fant.setBlendMode('ADD');
+                fant.setTint(new Phaser.Display.Color(255, 255, 255).color);
+
+                if (Settings.isFantasmasIntermitente())
+                {
+                    fant.setTint(new Phaser.Display.Color(20, Phaser.Math.Between(60, 200), Phaser.Math.Between(125, 255)).color);
+                }
             }
 
             let x = 0;

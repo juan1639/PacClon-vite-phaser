@@ -51,7 +51,8 @@ export class Settings
 
     static fantasmasScary = {
         activo: false,
-        duracion: 8000
+        duracion: 9000,
+        intermitente: false
     };
 
     static fantasmasBonusInc = {
@@ -67,7 +68,7 @@ export class Settings
         300, 300, 500, 800, 1000, 2000, 3000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000
     ];
 
-    static invisible = true;
+    static invisible = false;
     static botonesYcruceta = false;
 
     static coorCruceta = {
@@ -163,6 +164,11 @@ export class Settings
         return Settings.fantasmasScary.activo;
     }
 
+    static isFantasmasIntermitente()
+    {
+        return Settings.fantasmasScary.intermitente;
+    }
+
     static getFantasmasScaryDuracion()
     {
         return Settings.fantasmasScary.duracion;
@@ -242,6 +248,11 @@ export class Settings
     static setFantasmasScary(bool)
     {
         Settings.fantasmasScary.activo = bool;
+    }
+
+    static setFantasmasIntermitente(bool)
+    {
+        Settings.fantasmasScary.intermitente = bool;
     }
 
     static setFantasmasScaryDuracion(tiempo)
