@@ -31,6 +31,8 @@ export class Laberinto
 
     create()
     {
+        const nivel = Settings.getNivel();
+
         this.tile = this.relatedScene.physics.add.staticGroup();
 
         for (let i = 0; i < Laberinto.array_laberinto.length; i ++)
@@ -39,22 +41,36 @@ export class Laberinto
             {
                 const valor = Laberinto.array_laberinto[i][ii];
 
-                if (valor === 9)
+                if (valor === 9 && nivel === 1)
                 {
                     this.tile.create(
                         ii * Settings.tileXY.x,
                         i * Settings.tileXY.y,
-                        `tile${Settings.getNivel()}`
+                        `tile${nivel}`
                     ).refreshBody();
                 }
 
-                if (valor !== 9 && Settings.getNivel() === 1)
+                if (valor !== 9 && nivel === 1)
                 {
                     this.tile.create(
                         ii * Settings.tileXY.x,
                         i * Settings.tileXY.y,
-                        `tile-suelo${Settings.getNivel()}`
+                        `tile-suelo${nivel}`
                     ).refreshBody();
+                }
+
+                if (valor === 9 && nivel > 1)
+                {
+                    this.tile.create(
+                        ii * Settings.tileXY.x, i * Settings.tileXY.y, `tile-ssheet`
+                    ).refreshBody().setFrame(5 + nivel * 14).setScale(2);
+                }
+
+                if (valor !== 9 && nivel > 1)
+                {
+                    this.tile.create(
+                        ii * Settings.tileXY.x, i * Settings.tileXY.y, `tile-ssheet`
+                    ).refreshBody().setFrame(1 + nivel * 14).setScale(2);
                 }
             }
         }

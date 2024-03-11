@@ -107,7 +107,8 @@ export class Game extends Phaser.Scene
       Settings.setFantasmasScary(false);
       this.texto_enhorabuena();
 
-      setTimeout(() => {
+      setTimeout(() =>
+      {
         Settings.pausa.nivelSuperado = false;
         this.scene.start('congratulations');
       }, Settings.pausa.nivelSuperadoDuracion);
@@ -170,8 +171,8 @@ export class Game extends Phaser.Scene
   crear_colliders()
   {
     //Overlap Jugador-Puntitos
-    this.physics.add.overlap(this.jugador.get(), this.puntito.get(), (jugador, puntito) => {
-
+    this.physics.add.overlap(this.jugador.get(), this.puntito.get(), (jugador, puntito) =>
+    {
       suma_puntos(puntito);
       this.marcadorPtos.update(Settings.getTxtScore(), Settings.getPuntos());
       puntito.disableBody(true, true);

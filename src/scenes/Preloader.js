@@ -51,10 +51,11 @@ export class Preloader extends Scene
         this.load.setPath('assets');
 
         this.load.image('fondo', 'fondo_pacmanPh.png');
-        this.load.image('tile2', 'tile_pacmanMarron.png');
-        this.load.image('tile1', 'tile_pacmanMarron-2.png');
+        this.load.image('tile1', 'tile_pacmanMarron.png');
         this.load.image('tile3', 'tile_pacmanBlue.png');
         this.load.image('tile-suelo1', 'sueloTile-pacmanMarron-2.png');
+        this.load.spritesheet('tile-ssheet', 'tiles-suelo-metal.png', {frameWidth: 32, frameHeight: 32});
+
         // scene.load.image('puntito', './src/img/puntito.png');
         this.load.image('puntito', 'silverbubble.png');
         this.load.image('sparkle', 'sparkle1.png');
