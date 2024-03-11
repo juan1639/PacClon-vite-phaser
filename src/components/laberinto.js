@@ -41,44 +41,7 @@ export class Laberinto
             {
                 const valor = Laberinto.array_laberinto[i][ii];
 
-                if (valor === 9 && nivel === 1)
-                {
-                    this.tile.create(
-                        ii * Settings.tileXY.x,
-                        i * Settings.tileXY.y,
-                        `tile${nivel}`
-                    ).refreshBody();
-                }
-
-                if (valor !== 9 && nivel === 1)
-                {
-                    this.tile.create(
-                        ii * Settings.tileXY.x,
-                        i * Settings.tileXY.y,
-                        `tile-suelo${nivel}`
-                    ).refreshBody();
-                }
-
-                if (valor === 9 && nivel > 1 && nivel < 12)
-                {
-                    this.tile.create(
-                        ii * Settings.tileXY.x, i * Settings.tileXY.y, `tile-ssheet`
-                    ).refreshBody().setFrame(5 + (nivel - 2) * 14).setScale(2);
-                }
-
-                if (valor !== 9 && nivel > 1 && nivel < 12)
-                {
-                    this.tile.create(
-                        ii * Settings.tileXY.x, i * Settings.tileXY.y, `tile-ssheet`
-                    ).refreshBody().setFrame(1 + (nivel - 2) * 14).setScale(2);
-                }
-
-                if (valor === 9 && nivel > 11)
-                {
-                    this.tile.create(
-                        ii * Settings.tileXY.x, i * Settings.tileXY.y, `tile-ssheet`
-                    ).refreshBody().setFrame(25).setScale(2);
-                }
+                this.elegir_tilesNiveles(valor, nivel, i, ii);
             }
         }
 
@@ -89,6 +52,48 @@ export class Laberinto
     {
         if (Laberinto.array_laberinto[y][x] === 9) return true;
         return false;
+    }
+
+    elegir_tilesNiveles(valor, nivel, i, ii)
+    {
+        if (valor === 9 && nivel === 1)
+        {
+            this.tile.create(
+                ii * Settings.tileXY.x,
+                i * Settings.tileXY.y,
+                `tile${nivel}`
+            ).refreshBody();
+        }
+
+        if (valor !== 9 && nivel === 1)
+        {
+            this.tile.create(
+                ii * Settings.tileXY.x,
+                i * Settings.tileXY.y,
+                `tile-suelo${nivel}`
+            ).refreshBody();
+        }
+
+        if (valor === 9 && nivel > 1 && nivel < 12)
+        {
+            this.tile.create(
+                ii * Settings.tileXY.x, i * Settings.tileXY.y, `tile-ssheet`
+            ).refreshBody().setFrame(5 + (nivel - 2) * 14).setScale(2);
+        }
+
+        if (valor !== 9 && nivel > 1 && nivel < 12)
+        {
+            this.tile.create(
+                ii * Settings.tileXY.x, i * Settings.tileXY.y, `tile-ssheet`
+            ).refreshBody().setFrame(1 + (nivel - 2) * 14).setScale(2);
+        }
+
+        if (valor === 9 && nivel > 11)
+        {
+            this.tile.create(
+                ii * Settings.tileXY.x, i * Settings.tileXY.y, `tile-ssheet`
+            ).refreshBody().setFrame(25).setScale(2);
+        }
     }
 
     get()
