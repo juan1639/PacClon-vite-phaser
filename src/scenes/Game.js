@@ -1,7 +1,7 @@
 // ============================================================
 //      P a c  C l o n  -  Phaser  |  By Juan Eguia
 //   
-//      https://juan1639.github.io/PacClon-phaser
+//      https://juan1639.github.io/PacClon-vite-phaser
 // 
 // ------------------------------------------------------------
 import { Laberinto } from '../components/laberinto.js';
@@ -290,7 +290,7 @@ export class Game extends Phaser.Scene
       }
     }, (jugador, fantasma) => {
 
-      if (!fantasma.visible) return false;
+      if (!fantasma.visible || Settings.getInvisible()) return false;
       return true;
     });
 

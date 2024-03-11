@@ -67,6 +67,7 @@ export class Settings
         300, 300, 500, 800, 1000, 2000, 3000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000
     ];
 
+    static invisible = true;
     static botonesYcruceta = false;
 
     static coorCruceta = {
@@ -150,6 +151,11 @@ export class Settings
     static getTxtScore()
     {
         return Settings.txtScore;
+    }
+
+    static getInvisible()
+    {
+        return Settings.invisible;
     }
 
     static isFantasmasScary()

@@ -35,9 +35,16 @@ export class Cerezas
 
         this.cerezas.setData('intentoGiro', 'right');
         this.cerezas.setData('direccion', 'right');
-        this.cerezas.setData('puntos', Settings.getBonusCerezas()[Settings.getNivel()]);
         this.cerezas.setCircle(Math.floor(Settings.tileXY.y / 3));
         this.cerezas.setAngle(-20).setScale(0.8).setFrame(0).setFlipX(false);
+
+        if (Settings.getNivel() < 14)
+        {
+            this.cerezas.setData('puntos', Settings.getBonusCerezas()[Settings.getNivel()]);
+        } else
+        {
+            this.cerezas.setData('puntos', 7000);
+        }
 
         this.relatedScene.tweens.add({
             targets: this.cerezas,

@@ -59,18 +59,25 @@ export class Laberinto
                     ).refreshBody();
                 }
 
-                if (valor === 9 && nivel > 1)
+                if (valor === 9 && nivel > 1 && nivel < 12)
                 {
                     this.tile.create(
                         ii * Settings.tileXY.x, i * Settings.tileXY.y, `tile-ssheet`
-                    ).refreshBody().setFrame(5 + nivel * 14).setScale(2);
+                    ).refreshBody().setFrame(5 + (nivel - 2) * 14).setScale(2);
                 }
 
-                if (valor !== 9 && nivel > 1)
+                if (valor !== 9 && nivel > 1 && nivel < 12)
                 {
                     this.tile.create(
                         ii * Settings.tileXY.x, i * Settings.tileXY.y, `tile-ssheet`
-                    ).refreshBody().setFrame(1 + nivel * 14).setScale(2);
+                    ).refreshBody().setFrame(1 + (nivel - 2) * 14).setScale(2);
+                }
+
+                if (valor === 9 && nivel > 11)
+                {
+                    this.tile.create(
+                        ii * Settings.tileXY.x, i * Settings.tileXY.y, `tile-ssheet`
+                    ).refreshBody().setFrame(25).setScale(2);
                 }
             }
         }
