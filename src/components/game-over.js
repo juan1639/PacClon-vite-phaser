@@ -74,7 +74,7 @@ export class GameOver
   
       this.txtnewrecord.create();
 
-      this.tweens.add({
+      this.relatedScene.tweens.add({
         targets: this.txtnewrecord.get(),
         scale: 2.1,
         ease: 'sine.out',
