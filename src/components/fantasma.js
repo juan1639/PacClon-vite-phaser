@@ -93,8 +93,8 @@ export class Fantasma
 
             if (Settings.isFantasmasScary())
             {
-                fant.setBlendMode('ADD');
-                fant.setTint(new Phaser.Display.Color(255, 255, 255).color);
+                // fant.setBlendMode('ADD');
+                fant.setTintFill(new Phaser.Display.Color(9, 225, 255).color);
 
                 if (Settings.isFantasmasIntermitente())
                 {
