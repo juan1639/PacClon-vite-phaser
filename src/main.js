@@ -1,3 +1,4 @@
+import Phaser from 'phaser';
 import { Boot } from './scenes/Boot';
 import { Game } from './scenes/Game';
 import { Congratulations } from './scenes/congratulations';

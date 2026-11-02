@@ -26,6 +26,9 @@
         "vite": "^5.1.4"
     },
     "dependencies": {
-        "phaser": "^3.80.1"
+        "phaser": "3.90"
+    },
+    "allowScripts": {
+        "esbuild@0.19.11": true
     }
 }
