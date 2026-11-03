@@ -31,7 +31,7 @@ This template has been updated for:
 | `npm run dev` | Launch a development web server |
 | `npm run build` | Create a production build in the `dist` folder |
 | `npm run preview` | Serve the production build locally |
-| `npm run deploy` | Publish `dist/` to GitHub Pages (builds first) |
+| `npm run deploy` | Legacy: build and push `dist/` to the `gh-pages` branch (only useful if Pages is set to that branch) |
 
 ## Controls
 
@@ -86,9 +86,29 @@ When you issue the `npm run build` command, all static assets are automatically 
 
 ## Deploying to Production
 
-After you run the `npm run build` command, your code will be built into a single bundle and saved to the `dist` folder, along with any other assets your project imported, or stored in the public assets folder.
+`npm run build` generates the production bundle and copies the static assets into `dist/`.
 
-In order to deploy your game, you will need to upload *all* of the contents of the `dist` folder to a public facing web server.
+### GitHub Pages (automatic)
+
+`.github/workflows/deploy.yml` publishes `dist/` with `actions/deploy-pages` on every push to `main` (or manually with **Run workflow**):
+
+1. Builds with Node 22 and `npm ci`.
+2. Uploads `dist/` as the Pages artifact.
+3. Deploys it to the `github-pages` environment.
+
+**One-time setup:** in **Settings → Pages → Build and deployment**, set **Source: GitHub Actions**.
+
+The site is served at https://juan1639.github.io/PacClon-vite-phaser/
+
+`npm run deploy` (gh-pages) is kept only as a manual fallback: it pushes to the `gh-pages` branch, which GitHub Pages ignores when the source is set to GitHub Actions.
+
+### itch.io
+
+Upload the contents of `dist/` (zipped) as an HTML5 project. `base: './'` keeps the build working both on Pages and itch.io.
+
+### Other servers
+
+Upload the contents of the `dist` folder to any static web server.
 
 ## Customizing the Template
 

@@ -4,7 +4,7 @@
 - `npm install` — install deps
 - `npm run dev` — dev server via Vite (`vite --config vite/config.dev.mjs`), runs on `http://localhost:8080` (see `vite/config.dev.mjs`)
 - `npm run build` — production build via Vite (`vite build --config vite/config.prod.mjs`), outputs to `dist/`
-- `npm run predeploy` / `npm run deploy` — build then deploy `dist/` to GitHub Pages with `gh-pages`
+- `npm run predeploy` / `npm run deploy` — legacy: build then push `dist/` to the `gh-pages` branch with `gh-pages` (the live site uses GitHub Actions now)
 
 ## Entrypoints & structure
 - `index.html` carga `src/main.js` (módulo) y define una CSP en un `<meta>`; Phaser se empaqueta desde la dependencia npm (`phaser ^3.90.0`).
@@ -22,7 +22,8 @@
 - Phaser se carga desde npm y Vite lo separa en su propio chunk (`phaser-*.js`); no hay `phaser.min.js` local que cargar aparte.
 - `src/scenes/Congratulations.js` se importa como `Congratulations` en `main.js` — respeta el camel/PascalCase de los ficheros.
 - `index.html` incluye una CSP (`Content-Security-Policy`) porque GitHub Pages no permite cabeceras propias: si añades scripts, estilos, fuentes o peticiones externas, hay que ampliar la directiva correspondiente.
-- Deploy uses `gh-pages -d dist` (base `./` in Vite configs so it works on Pages).
+- El deploy oficial es `.github/workflows/deploy.yml` (`actions/deploy-pages`) al hacer push a `main`; requiere que Pages tenga **Source: GitHub Actions**. `npm run deploy` (gh-pages) queda como fallback manual.
+- `public/.nojekyll` se copia a `dist/` en el build (por si se vuelve a publicar desde una rama).
 
 ## Preferencias del usuario
 - Responde siempre en español.
@@ -31,7 +32,8 @@
 - No hay tests: para comprobar cambios, indica qué probar con `npm run dev` en el navegador.
 
 ## Publicación
-- El juego se publica también en itch.io (build de `dist/` subido como HTML5), además de GitHub Pages.
+- GitHub Pages se publica automáticamente con `.github/workflows/deploy.yml` al hacer push a `main` (Source: GitHub Actions).
+- El juego se publica también en itch.io (build de `dist/` subido a mano como HTML5), además de GitHub Pages.
 - Mantener `base: './'` en Vite para que funcione en ambos sitios.
 
 ## Controles
