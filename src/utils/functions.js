@@ -25,6 +25,10 @@ function overlapComePuntitogordo(jugador, puntitogordo)
 
 function overlapJugadorFantasmas(jugador, fantasma)
 {
+    // Cheat "JON": Pac-Man es invulnerable y los fantasmas lo atraviesan,
+    // pero en modo scary se les sigue pudiendo comer.
+    if (Settings.isInvulnerable() && !Settings.isFantasmasScary()) return;
+
     if (!Settings.isFantasmasScary())
     {
         play_sonidos(this.sonido_jugadorDies, false, 0.7);

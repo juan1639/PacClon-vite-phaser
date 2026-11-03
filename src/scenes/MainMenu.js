@@ -23,6 +23,9 @@ export class MainMenu extends Scene
         Settings.setBotonesYcruceta(false);
         Settings.setFantasmasBonusInc(0);
 
+        // Teclas pulsadas para detectar el cheat "J-O-N"
+        this.cheatBuffer = [];
+
         this.botoninicio = new BotonNuevaPartida(this);
         this.botonsettings = new BotonSettings(this);
 
@@ -83,7 +86,65 @@ export class MainMenu extends Scene
         
         this.timeline.play();
 
+        // Cheat: pulsar J, O y N seguidas en la pantalla de título.
+        // El listener se quita al salir de la escena para no duplicarlo.
+        this.input.keyboard.on('keydown', this.detectar_cheat, this);
+        this.events.once('shutdown', () =>
+        {
+            this.input.keyboard.off('keydown', this.detectar_cheat, this);
+        });
+
+        // Si el cheat ya estaba activo (volvemos al menú), lo recordamos
+        if (Settings.isInvulnerable()) this.mostrar_cheat_activado(false);
+
         this.sonido_intermision.play();
         this.sonido_intermision.volume = 0.5;
+    }
+
+    detectar_cheat(event)
+    {
+        const tecla = String(event.key).toUpperCase();
+
+        // Solo letras: las flechas y demás no cuentan para la secuencia
+        if (!/^[A-Z]$/.test(tecla)) return;
+
+        this.cheatBuffer.push(tecla);
+        if (this.cheatBuffer.length > 3) this.cheatBuffer.shift();
+
+        if (this.cheatBuffer.join('') !== 'JON') return;
+        if (Settings.isInvulnerable()) return;
+
+        Settings.setInvulnerable(true);
+        this.mostrar_cheat_activado(true);
+    }
+
+    // Texto abajo a la izquierda; parpadea solo al activarlo
+    mostrar_cheat_activado(animar)
+    {
+        this.txtCheat = new Textos(this, {
+            x: 10,
+            y: this.sys.game.config.height - 12,
+            txt: ' Cheat: invulnerable ',
+            size: 22, color: '#7ff', style: 'bold',
+            stroke: '#046', sizeStroke: 8,
+            shadowOsx: 2, shadowOsy: 2, shadowColor: '#111111',
+            bool1: false, bool2: true, origin: [0, 1],
+            elastic: 0, dura: 0
+        });
+
+        this.txtCheat.create();
+
+        const texto = this.txtCheat.get().setDepth(Settings.getDepth().textos);
+
+        if (animar)
+        {
+            this.tweens.add({
+                targets: texto,
+                alpha: {from: 1, to: 0.35},
+                duration: 350,
+                yoyo: true,
+                repeat: 3
+            });
+        }
     }
 }

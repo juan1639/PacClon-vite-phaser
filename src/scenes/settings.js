@@ -69,6 +69,9 @@ export class Settings
     static invisible = false;
     static botonesYcruceta = false;
 
+    // Cheat (J-O-N en la pantalla de título): los fantasmas no matan
+    static invulnerable = false;
+
     static coorCruceta = {
         xx: 60,
         yy: 1400,
@@ -133,6 +136,11 @@ export class Settings
     static getInvisible()
     {
         return Settings.invisible;
+    }
+
+    static isInvulnerable()
+    {
+        return Settings.invulnerable;
     }
 
     static isFantasmasScary()
@@ -244,5 +252,10 @@ export class Settings
     static setBotonesYcruceta(bool)
     {
         Settings.botonesYcruceta = bool;
+    }
+
+    static setInvulnerable(bool)
+    {
+        Settings.invulnerable = bool;
     }
 }

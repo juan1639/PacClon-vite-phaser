@@ -36,6 +36,7 @@ This template has been updated for:
 
 - **Keyboard:** arrow keys to move, and the on-screen fullscreen button.
 - **Touch:** tap the gamepad icon to show the on-screen D-pad, then use it to move.
+- **Cheat:** on the title screen, type `J`, `O`, `N` in a row (keyboard only) to become invulnerable: ghosts pass through Pac-Man. It stays active until the page is reloaded.
 
 ## Writing Code
 

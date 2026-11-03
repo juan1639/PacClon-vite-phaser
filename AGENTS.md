@@ -37,3 +37,4 @@
 
 ## Controles
 - El juego debe funcionar con teclado y con controles táctiles.
+- Cheat de invulnerabilidad: en `MainMenu` un listener `keydown` detecta la secuencia J-O-N y llama a `Settings.setInvulnerable(true)`; `overlapJugadorFantasmas` la respeta salvo en modo scary (para poder comer fantasmas). Persiste hasta recargar la página.
