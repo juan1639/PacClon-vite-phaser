@@ -1,3 +1,21 @@
+// Récord guardado en el navegador. La clave lleva el nombre del juego porque
+// en itch.io todos los juegos comparten el mismo dominio (y localStorage).
+const CLAVE_RECORD = 'pacclon-vite-phaser.record';
+const RECORD_INICIAL = 12000;
+
+function leer_record()
+{
+    try
+    {
+        const guardado = parseInt(localStorage.getItem(CLAVE_RECORD), 10);
+        if (Number.isFinite(guardado)) return Math.max(guardado, RECORD_INICIAL);
+    } catch (e)
+    {
+        // localStorage puede no estar disponible (modo privado, iframe bloqueado...)
+    }
+
+    return RECORD_INICIAL;
+}
 
 export class Settings
 {
@@ -15,7 +33,7 @@ export class Settings
 
     static puntos = 0;
     static nivel = 1;
-    static hi = 12000;
+    static hi = leer_record();
     static vidas = 3;
     static gameOver = false;
 
@@ -222,6 +240,12 @@ export class Settings
     static setRecord(hiScore)
     {
         Settings.hi = hiScore;
+
+        // Si no se puede guardar, el récord sigue valiendo hasta recargar la página
+        try
+        {
+            localStorage.setItem(CLAVE_RECORD, String(hiScore));
+        } catch (e) {}
     }
 
     static setVidas(lifes)

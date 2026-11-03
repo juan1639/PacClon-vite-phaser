@@ -59,7 +59,8 @@ export class Cerezas
 
     update()
     {
-        if (!this.relatedScene.jugador.get().body.enable) return;
+        // Las cerezas se paran igual que jugador y fantasmas durante las pausas
+        if (!this.relatedScene.jugador.get().body.enable || Settings.pausa.comeFantasma || Settings.pausa.nivelSuperado) return;
 
         const direcc = Cerezas.INFO_DIRECCION;
 

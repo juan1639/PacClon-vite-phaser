@@ -29,7 +29,7 @@ Clon de Pac-Man hecho con Phaser 3.90 y Vite 5, en JavaScript (módulos ES, sin 
   Usar siempre `this.time.delayedCall` / timelines de escena, nunca `setTimeout`, para que se cancelen al cambiar de escena.
 - **Sonidos:** son globales entre escenas; los que tengan bucle hay que pararlos en `shutdown()` de la escena (ver `Game.shutdown`).
 - **Cámaras:** `Game` usa la cámara principal (sigue al jugador) y dos cámaras extra: una para los marcadores (`cameraScores`) y otra para los controles táctiles (`cameraControles`). Por eso marcadores y cruceta están en coordenadas fuera del laberinto (y negativas o muy grandes).
-- **Récord:** `Settings.hi` empieza en 12000 y se actualiza en el game over (`game-over.js`), pero no se guarda: se pierde al recargar la página.
+- **Récord:** `Settings.hi` se lee de `localStorage` (clave `pacclon-vite-phaser.record`, mínimo 12000) y `Settings.setRecord()` lo guarda al batirlo en el game over (`game-over.js`). Si `localStorage` falla, funciona igual pero se pierde al recargar.
 
 ## Gotchas
 - **Las claves de escena no siempre coinciden con el nombre de la clase:** `Game` usa la clave `'game'` y `Congratulations` usa `'congratulations'`

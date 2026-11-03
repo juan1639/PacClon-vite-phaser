@@ -143,6 +143,11 @@ export class Game extends Phaser.Scene
     // Si ya estaba activo (otro puntito gordo), reinicia los tiempos
     this.parar_timers_scary();
 
+    // Con otro puntito gordo, los fantasmas ya comidos (solo ojos) vuelven
+    // a aparecer y el bonus empieza otra vez en 200
+    if (Settings.isFantasmasScary()) this.fantasmas.clear_tint();
+    Settings.setFantasmasBonusInc(0);
+
     Settings.setFantasmasScary(true);
     Settings.setFantasmasIntermitente(false);
 
@@ -170,7 +175,8 @@ export class Game extends Phaser.Scene
     if (!estaba_activo) return;
 
     this.fantasmas.clear_tint();
-    this.fantasmas.get().setBlendMode('ERASE');
+    // NORMAL: con 'ERASE' los fantasmas se pintaban como agujeros/siluetas
+    this.fantasmas.get().setBlendMode(Phaser.BlendModes.NORMAL);
     this.sonido_fantasmasScary.pause();
     Settings.setFantasmasBonusInc(0);
   }
