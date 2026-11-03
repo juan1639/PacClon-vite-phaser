@@ -31,7 +31,6 @@ This template has been updated for:
 | `npm run dev` | Launch a development web server |
 | `npm run build` | Create a production build in the `dist` folder |
 | `npm run preview` | Serve the production build locally |
-| `npm run deploy` | Legacy: build and push `dist/` to the `gh-pages` branch (only useful if Pages is set to that branch) |
 
 ## Controls
 
@@ -100,7 +99,7 @@ When you issue the `npm run build` command, all static assets are automatically 
 
 The site is served at https://juan1639.github.io/PacClon-vite-phaser/
 
-`npm run deploy` (gh-pages) is kept only as a manual fallback: it pushes to the `gh-pages` branch, which GitHub Pages ignores when the source is set to GitHub Actions.
+Pushing to `main` is all you need: the workflow builds and deploys by itself. There is no `gh-pages` branch anymore — the old `npm run deploy` script was removed.
 
 ### itch.io
 
