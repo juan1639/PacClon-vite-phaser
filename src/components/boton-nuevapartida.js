@@ -89,6 +89,48 @@ export class BotonSettings
 }
 
 // ==================================================================================
+// Altavoz para silenciar/activar todo el sonido (el gestor de sonido es global)
+export class BotonSilencio
+{
+  constructor(scene, args)
+  {
+    this.relatedScene = scene;
+    this.args = args;
+  }
+
+  create()
+  {
+    const {x, y} = this.args;
+
+    this.boton = this.relatedScene.add.text(x, y, this.icono(), {
+      fontSize: '64px',
+      fontFamily: 'sans-serif'
+    }).setOrigin(0.5, 0.5).setInteractive();
+
+    this.boton.setDepth(Settings.getDepth().textos);
+
+    this.boton.on('pointerover', () => {
+      this.boton.setScale(1.1);
+    });
+
+    this.boton.on('pointerout', () => {
+      this.boton.setScale(1);
+    });
+
+    this.boton.on('pointerdown', () => {
+      Settings.setSilencio(!Settings.isSilencio());
+      this.relatedScene.sound.mute = Settings.isSilencio();
+      this.boton.setText(this.icono());
+    });
+  }
+
+  icono()
+  {
+    return Settings.isSilencio() ? '🔇' : '🔊';
+  }
+}
+
+// ==================================================================================
 export class BotonFullScreen
 {
   constructor(scene, args)

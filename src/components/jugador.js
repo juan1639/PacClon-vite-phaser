@@ -62,29 +62,29 @@ export class Jugador
 
         Object.keys(Jugador.INFO_DIRECCION).forEach(tecla =>
         {
-            
             if (this.controles[tecla].isDown) this.intentoGiro = tecla;
-
-            if (Settings.isBotonesYcruceta())
-            {
-                if (this.relatedScene.crucetaup.isDown)
-                {
-                    this.intentoGiro = 'up';
-
-                } else if (this.relatedScene.crucetadown.isDown)
-                {
-                    this.intentoGiro = 'down';
-
-                } else if (this.relatedScene.crucetaleft.isDown)
-                {
-                    this.intentoGiro = 'left';
-
-                } else if (this.relatedScene.crucetaright.isDown)
-                {
-                    this.intentoGiro = 'right';
-                }
-            }
         });
+
+        // Cruceta táctil (fuera del forEach: basta con mirarla una vez por frame)
+        if (Settings.isBotonesYcruceta())
+        {
+            if (this.relatedScene.crucetaup.isDown)
+            {
+                this.intentoGiro = 'up';
+
+            } else if (this.relatedScene.crucetadown.isDown)
+            {
+                this.intentoGiro = 'down';
+
+            } else if (this.relatedScene.crucetaleft.isDown)
+            {
+                this.intentoGiro = 'left';
+
+            } else if (this.relatedScene.crucetaright.isDown)
+            {
+                this.intentoGiro = 'right';
+            }
+        }
 
         if (this.jugador.x % Settings.tileXY.x === 0 && this.jugador.y % Settings.tileXY.y === 0)
         {

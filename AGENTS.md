@@ -12,6 +12,7 @@ Clon de Pac-Man hecho con Phaser 3.90 y Vite 5, en JavaScript (módulos ES, sin 
 - `index.html` carga `src/main.js` como módulo y define una CSP en un `<meta>`. Phaser se empaqueta desde npm (`phaser ^3.90.0`).
 - `src/main.js` crea el `Phaser.Game`: 800x550, `Phaser.AUTO`, física arcade (`debug: false`), escala FIT centrada.
   Orden de escenas: `Boot` → `Preloader` → `MainMenu` → `Game` → `Congratulations`.
+  `Pausa` (clave `'Pausa'`) va la última en la lista para dibujarse encima: `Game.pausar()` la lanza con `scene.launch` y pausa `Game`.
 - `src/scenes/`: las escenas. `settings.js` **no es una escena**: es la clase `Settings` con el estado y la configuración en propiedades estáticas.
 - `src/components/`: una clase por elemento del juego (`jugador.js`, `fantasma.js`, `laberinto.js`, `puntitos.js`, `cerezas.js`, `marcador.js`, botones, cruceta táctil, `Textos.js`...).
 - `src/utils/functions.js`: callbacks de colisiones (`overlap*`), puntos, vidas, partículas y `play_sonidos`.
@@ -31,7 +32,12 @@ Clon de Pac-Man hecho con Phaser 3.90 y Vite 5, en JavaScript (módulos ES, sin 
   Los puntos se suman y luego se llama a `actualizar_puntos(scene)` (`functions.js`), que actualiza el marcador y da la vida extra.
 - **Modo scary** (al comer un puntito gordo): lo controla `Game` con timers de escena (`iniciar_modo_scary`, `fin_modo_scary`, `parar_timers_scary`).
   Usar siempre `this.time.delayedCall` / timelines de escena, nunca `setTimeout`, para que se cancelen al cambiar de escena.
+  Cada fantasma tiene dos datos: `comido` (está invisible y sus ojos vuelven a casa por el laberinto con `OjosFantasma.volver_a_casa()`,
+  que usa `Laberinto.camino()` y una cadena de tweens) y `recuperado` (reapareció en casa durante el modo scary: es peligroso).
+  Para saber si un fantasma se puede comer, usar `Fantasma.es_comestible(fant)`, no solo `Settings.isFantasmasScary()`.
 - **Sonidos:** son globales entre escenas; los que tengan bucle hay que pararlos en `shutdown()` de la escena (ver `Game.shutdown`).
+  La pausa usa `sound.pauseAll()` / `resumeAll()`: para cortar un sonido usar `stop()`, no `pause()`, o se reanudaría al quitar la pausa.
+  El silencio (`Settings.silencio`, guardado en `localStorage`) se aplica con `sound.mute` en `Boot` y lo cambia `BotonSilencio`.
 - **Cámaras:** `Game` usa la cámara principal (sigue al jugador) y dos cámaras extra: una para los marcadores (`cameraScores`) y otra para los controles táctiles (`cameraControles`). Por eso marcadores y cruceta están en coordenadas fuera del laberinto (y negativas o muy grandes).
 - **Récord:** `Settings.hi` se lee de `localStorage` (clave `pacclon-vite-phaser.record`, mínimo 12000) y `Settings.setRecord()` lo guarda al batirlo en el game over (`game-over.js`). Si `localStorage` falla, funciona igual pero se pierde al recargar.
 
@@ -45,7 +51,8 @@ Clon de Pac-Man hecho con Phaser 3.90 y Vite 5, en JavaScript (módulos ES, sin 
 - `vite/config.prod.mjs` usa `minify: 'terser'` (por eso `terser` está en devDependencies) e incluye el plugin `phasermsg` heredado de la plantilla.
 
 ## Controles
-- Teclado: flechas para moverse.
+- Teclado: flechas para moverse; P para pausar y reanudar (no funciona en el game over).
+- Altavoz abajo a la derecha (en la cámara de controles) para silenciar el sonido; se recuerda al recargar.
 - Táctil: el icono del gamepad muestra la cruceta en pantalla. El juego debe seguir funcionando con teclado **y** con controles táctiles.
 - La escena `Boot` pide tocar o hacer clic para empezar (desbloquea el audio en el navegador).
 - Cheat de invulnerabilidad: en `MainMenu`, la secuencia J-O-N llama a `Settings.setInvulnerable(true)`.

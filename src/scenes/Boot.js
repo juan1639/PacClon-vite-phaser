@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { Textos } from '../components/Textos.js';
+import { Settings } from './settings.js';
 
 export class Boot extends Scene
 {
@@ -30,6 +31,9 @@ export class Boot extends Scene
 
     create ()
     {
+        // El silencio guardado se aplica al gestor de sonido global desde el principio
+        this.sound.mute = Settings.isSilencio();
+
         this.add.image(0, 0, 'background').setOrigin(0, 0);
         this.txt.create();
         

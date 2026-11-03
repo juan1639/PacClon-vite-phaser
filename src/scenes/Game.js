@@ -12,7 +12,7 @@ import { Cerezas } from '../components/cerezas.js';
 import { Textos } from '../components/Textos.js';
 import { Marcador } from './../components/marcador.js';
 import { Settings } from './settings.js';
-import { BotonFullScreen, BotonNuevaPartida } from '../components/boton-nuevapartida.js';
+import { BotonFullScreen, BotonNuevaPartida, BotonSilencio } from '../components/boton-nuevapartida.js';
 import { CrucetaDireccion, IconoGamePad } from '../components/botonycruceta.js';
 import { GameOver } from '../components/game-over.js';
 
@@ -72,6 +72,9 @@ export class Game extends Phaser.Scene
     // Al salir de la escena hay que parar timers y sonidos propios
     this.events.once('shutdown', this.shutdown, this);
 
+    // Pausa con la tecla P (el listener lo quita Phaser al salir de la escena)
+    this.input.keyboard.on('keydown-P', this.pausar, this);
+
     this.add.image(0, 0, 'fondo').setOrigin(0, 0);
     
     this.set_sonidos();
@@ -99,6 +102,7 @@ export class Game extends Phaser.Scene
     this.crucetaup.create();
     this.crucetadown.create();
     this.iconogamepad.create();
+    this.botonsilencio.create();
 
     this.cameras.main.startFollow(this.jugador.get());
 
@@ -143,9 +147,9 @@ export class Game extends Phaser.Scene
     // Si ya estaba activo (otro puntito gordo), reinicia los tiempos
     this.parar_timers_scary();
 
-    // Con otro puntito gordo, los fantasmas ya comidos (solo ojos) vuelven
-    // a aparecer y el bonus empieza otra vez en 200
-    if (Settings.isFantasmasScary()) this.fantasmas.clear_tint();
+    // Con otro puntito gordo, todos los fantasmas (también los que ya habían
+    // vuelto a casa) se pueden comer otra vez y el bonus empieza en 200
+    this.fantasmas.quitar_scary();
     Settings.setFantasmasBonusInc(0);
 
     Settings.setFantasmasScary(true);
@@ -174,10 +178,11 @@ export class Game extends Phaser.Scene
 
     if (!estaba_activo) return;
 
-    this.fantasmas.clear_tint();
+    this.fantasmas.quitar_scary();
     // NORMAL: con 'ERASE' los fantasmas se pintaban como agujeros/siluetas
     this.fantasmas.get().setBlendMode(Phaser.BlendModes.NORMAL);
-    this.sonido_fantasmasScary.pause();
+    // stop() y no pause(): al quitar la pausa (tecla P) se reanudan los sonidos pausados
+    this.sonido_fantasmasScary.stop();
     Settings.setFantasmasBonusInc(0);
   }
 
@@ -187,6 +192,18 @@ export class Game extends Phaser.Scene
 
     this.timers_scary.forEach(timer => timer.remove(false));
     this.timers_scary = null;
+  }
+
+  // Para la escena entera (update, timers, tweens, física) y los sonidos.
+  // La escena Pausa la reanuda al volver a pulsar P.
+  pausar()
+  {
+    // En el game over no: el juego ya está parado esperando al botón
+    if (Settings.isGameOver()) return;
+
+    this.sound.pauseAll();
+    this.scene.pause();
+    this.scene.launch('Pausa');
   }
 
   // Phaser no llama solo a este método: se registra con 'shutdown' en create()
@@ -233,7 +250,7 @@ export class Game extends Phaser.Scene
       {
         at: this.pausa_inicial.duracion,
         run: () => {
-          this.pausa_inicial.activa = false,
+          this.pausa_inicial.activa = false;
           this.txtpreparado.get().setVisible(false);
         }
       }
@@ -384,6 +401,10 @@ export class Game extends Phaser.Scene
       ang: 0,
       scX: 2, scY: 2
     });
+
+    // Abajo a la derecha, en la cámara de controles (simétrico al icono del gamepad).
+    // En la barra de marcadores no cabe junto a pantalla completa.
+    this.botonsilencio = new BotonSilencio(this, { x: xx + 760, y: yy });
   }
 
   set_sonidos()

@@ -67,6 +67,53 @@ export class Laberinto
         return fila[x] !== 9;
     }
 
+    // Camino más corto entre dos casillas (búsqueda en anchura, sin pasar por el túnel).
+    // Devuelve [[x, y], ...] desde el origen hasta el destino, o null si no hay camino.
+    static camino(desdeX, desdeY, hastaX, hastaY)
+    {
+        const mapa = Laberinto.array_laberinto;
+        const filas = mapa.length;
+        const columnas = mapa[0].length;
+        const clave = (x, y) => y * columnas + x;
+
+        if (!Laberinto.es_transitable(desdeX, desdeY)) return null;
+
+        // Para cada casilla visitada, la casilla desde la que se llegó
+        const previo = new Map([[clave(desdeX, desdeY), null]]);
+        const cola = [[desdeX, desdeY]];
+
+        while (cola.length > 0)
+        {
+            const [x, y] = cola.shift();
+
+            if (x === hastaX && y === hastaY)
+            {
+                const ruta = [];
+
+                for (let k = clave(x, y); k !== null; k = previo.get(k))
+                {
+                    ruta.unshift([k % columnas, Math.floor(k / columnas)]);
+                }
+
+                return ruta;
+            }
+
+            [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dx, dy]) =>
+            {
+                const nx = x + dx;
+                const ny = y + dy;
+
+                if (nx < 0 || ny < 0 || nx >= columnas || ny >= filas) return;
+                if (mapa[ny][nx] === 9 || previo.has(clave(nx, ny))) return;
+
+                previo.set(clave(nx, ny), clave(x, y));
+                cola.push([nx, ny]);
+            });
+        }
+
+        return null;
+    }
+
     elegir_tilesNiveles(valor, nivel, i, ii)
     {
         if (valor === 9 && nivel === 1)

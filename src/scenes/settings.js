@@ -17,6 +17,20 @@ function leer_record()
     return RECORD_INICIAL;
 }
 
+// Silencio (botón de altavoz), también guardado en el navegador
+const CLAVE_SILENCIO = 'pacclon-vite-phaser.silencio';
+
+function leer_silencio()
+{
+    try
+    {
+        return localStorage.getItem(CLAVE_SILENCIO) === '1';
+    } catch (e)
+    {
+        return false;
+    }
+}
+
 export class Settings
 {
     static screen = {
@@ -90,8 +104,10 @@ export class Settings
         300, 300, 500, 800, 1000, 2000, 3000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000
     ];
 
-    static invisible = false;
     static botonesYcruceta = false;
+
+    // Sonido silenciado (se guarda en localStorage; no se reinicia por partida)
+    static silencio = leer_silencio();
 
     // Cheat (J-O-N en la pantalla de título): los fantasmas no matan
     static invulnerable = false;
@@ -157,11 +173,6 @@ export class Settings
         return Settings.txtScore;
     }
 
-    static getInvisible()
-    {
-        return Settings.invisible;
-    }
-
     static isInvulnerable()
     {
         return Settings.invulnerable;
@@ -200,6 +211,11 @@ export class Settings
     static isVidaExtraConseguida()
     {
         return Settings.vidaExtra.conseguida;
+    }
+
+    static isSilencio()
+    {
+        return Settings.silencio;
     }
 
     static isBotonesYcruceta()
@@ -292,6 +308,16 @@ export class Settings
     static setVidaExtraConseguida(bool)
     {
         Settings.vidaExtra.conseguida = bool;
+    }
+
+    static setSilencio(bool)
+    {
+        Settings.silencio = bool;
+
+        try
+        {
+            localStorage.setItem(CLAVE_SILENCIO, bool ? '1' : '0');
+        } catch (e) {}
     }
 
     static setBotonesYcruceta(bool)

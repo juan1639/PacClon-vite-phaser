@@ -28,6 +28,9 @@ export class Fantasma
         down: 'up'
     };
 
+    // Color de los fantasmas en modo scary (número fijo: no crear objetos en cada frame)
+    static COLOR_SCARY = 0x09e1ff;
+
     // Paso extra de 4 px cada N frames para subir la velocidad sin tocar VEL
     // (VEL debe dividir a 64). 0 = nunca. Ajustar aquí la dificultad.
     static PASO_EXTRA_NIVEL_3 = 4;   // niveles 3-4: ~5 px/frame
@@ -65,6 +68,10 @@ export class Fantasma
             fant.setData('intentoGiro', 'right');
             fant.setData('direccion', 'right');
             fant.setData('id', index);
+            // comido: sus ojos vuelven a casa (el fantasma está invisible y quieto)
+            // recuperado: ya volvió a casa durante el modo scary; vuelve a ser peligroso
+            fant.setData('comido', false);
+            fant.setData('recuperado', false);
             fant.setCircle(
                 Math.floor(Settings.tileXY.y / 3),
                 Math.floor(Settings.tileXY.x / 12),
@@ -109,14 +116,16 @@ export class Fantasma
         this.fantasmas.children.iterate((fant, index) =>
         {
 
-            if (Settings.isFantasmasScary())
+            // Mientras sus ojos vuelven a casa, el fantasma no se mueve
+            if (fant.getData('comido')) return;
+
+            if (Fantasma.es_comestible(fant))
             {
-                // fant.setBlendMode('ADD');
-                fant.setTintFill(new Phaser.Display.Color(9, 225, 255).color);
+                fant.setTintFill(Fantasma.COLOR_SCARY);
 
                 if (Settings.isFantasmasIntermitente())
                 {
-                    fant.setTint(new Phaser.Display.Color(20, Phaser.Math.Between(60, 200), Phaser.Math.Between(125, 255)).color);
+                    fant.setTint(Phaser.Display.Color.GetColor(20, Phaser.Math.Between(60, 200), Phaser.Math.Between(125, 255)));
                 }
             }
 
@@ -188,6 +197,12 @@ export class Fantasma
         }
     }
 
+    // En modo scary se puede comer, salvo si ya volvió a casa (recuperado)
+    static es_comestible(fant)
+    {
+        return Settings.isFantasmasScary() && !fant.getData('recuperado');
+    }
+
     // Umbral para Phaser.Math.Between(0, 10): igual que antes en el nivel 1,
     // pero crece la mitad de rápido (antes era base + nivel)
     static umbral_persecucion(base)
@@ -238,7 +253,7 @@ export class Fantasma
         }
 
         // En modo scary huyen: dirección contraria a la de perseguir
-        if (Settings.isFantasmasScary())
+        if (Fantasma.es_comestible(fant))
         {
             fant.setData('direccion', Fantasma.OPUESTA[fant.getData('direccion')]);
         }
@@ -273,19 +288,14 @@ export class Fantasma
         return duracion;
     }
 
-    clear_tint()
+    // Fin del modo scary (o nuevo puntito gordo): quita el tinte y el estado "recuperado".
+    // Los fantasmas comidos no reaparecen aquí: lo hacen cuando sus ojos llegan a casa.
+    quitar_scary()
     {
         this.fantasmas.children.iterate(fant =>
         {
-            if (!fant.visible)
-            {
-                fant.setVisible(true).clearTint();
-                this.relatedScene.ojos.get().getChildren()[fant.getData('id')].setVisible(false);
-            
-            } else
-            {
-                fant.clearTint();
-            }
+            fant.clearTint();
+            fant.setData('recuperado', false);
         });
     }
 
@@ -361,6 +371,9 @@ export class FantasmaPreGame
 // ================================================================================
 export class OjosFantasma
 {
+    // Milisegundos que tardan los ojos en recorrer una casilla al volver a casa
+    static DURACION_CASILLA = 100;
+
     constructor(scene)
     {
         this.relatedScene = scene;
@@ -406,6 +419,9 @@ export class OjosFantasma
     {
         this.ojosfantasma.children.iterate((ojos, index) =>
         {
+            // Los ojos que vuelven a casa los mueve su propio tween
+            if (ojos.getData('volviendo')) return;
+
             const fantasma = this.relatedScene.fantasmas.get().getChildren()[index];
 
             this.set_flips(fantasma, ojos);
@@ -433,6 +449,77 @@ export class OjosFantasma
         {
             ojos.anims.play(`anim53`, true);
         }
+    }
+
+    // Fantasma comido: los ojos vuelven por el laberinto a la posición inicial
+    // del fantasma y allí reaparece. Usa tweens de escena (se pausan y se
+    // cancelan con la escena).
+    volver_a_casa(index)
+    {
+        const ojos = this.ojosfantasma.getChildren()[index];
+        const fant = this.relatedScene.fantasmas.get().getChildren()[index];
+        const tile = Settings.tileXY;
+        const casa = Settings.fantasmasIniXY[Object.keys(Settings.fantasmasIniXY)[index]];
+        const columnas = Laberinto.array_laberinto[0].length;
+
+        // Casilla más cercana (en el túnel, fuera del laberinto, la del borde)
+        const desdeX = Phaser.Math.Clamp(Math.round(fant.x / tile.x), 0, columnas - 1);
+        const desdeY = Math.round(fant.y / tile.y);
+
+        // Si no hubiera camino, van directos a casa
+        const ruta = Laberinto.camino(desdeX, desdeY, casa[0], casa[1]) || [casa];
+
+        ojos.setPosition(fant.x, fant.y).setVisible(true).setData('volviendo', true);
+
+        let anterior = { x: fant.x, y: fant.y };
+
+        const tramos = ruta.map(([cx, cy]) =>
+        {
+            const destino = { x: cx * tile.x, y: cy * tile.y };
+            const casillas = (Math.abs(destino.x - anterior.x) + Math.abs(destino.y - anterior.y)) / tile.x;
+            const anim = OjosFantasma.anim_direccion(anterior, destino);
+
+            anterior = destino;
+
+            return {
+                x: destino.x,
+                y: destino.y,
+                duration: Math.max(16, casillas * OjosFantasma.DURACION_CASILLA),
+                onStart: () => ojos.anims.play(anim, true)
+            };
+        });
+
+        this.relatedScene.tweens.chain({
+            targets: ojos,
+            tweens: tramos,
+            onComplete: () => this.llegar_a_casa(index)
+        });
+    }
+
+    llegar_a_casa(index)
+    {
+        const ojos = this.ojosfantasma.getChildren()[index];
+        const fant = this.relatedScene.fantasmas.get().getChildren()[index];
+        const casa = Settings.fantasmasIniXY[Object.keys(Settings.fantasmasIniXY)[index]];
+
+        ojos.setVisible(false).setData('volviendo', false);
+
+        fant.setPosition(casa[0] * Settings.tileXY.x, casa[1] * Settings.tileXY.y);
+        fant.setData('comido', false);
+        // Si el modo scary sigue activo, reaparece ya normal: persigue y es peligroso
+        fant.setData('recuperado', Settings.isFantasmasScary());
+        fant.clearTint();
+
+        if (!Settings.isGameOver()) fant.setVisible(true);
+    }
+
+    // Animación de los ojos según hacia dónde se mueven
+    static anim_direccion(desde, hasta)
+    {
+        if (hasta.x < desde.x) return 'anim51';
+        if (hasta.y < desde.y) return 'anim52';
+        if (hasta.y > desde.y) return 'anim53';
+        return 'anim50';
     }
 
     get()

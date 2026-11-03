@@ -14,6 +14,8 @@ export class Textos
         const excepcionesString = excepciones.map(excepcion => excepcion.toString());
         excepcionesString.push(' Congratulations! ');
         excepcionesString.push(' Level Up! ');
+        // Texto de la vida extra: también se desvanece
+        excepcionesString.push(' Extra Life! ');
 
         const {
             x, y, txt,

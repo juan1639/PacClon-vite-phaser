@@ -1,5 +1,6 @@
 import { Settings } from "../scenes/settings.js";
 import { Textos } from "../components/Textos.js";
+import { Fantasma } from "../components/fantasma.js";
 
 function overlapComePuntitos(jugador, puntito)
 {
@@ -25,12 +26,18 @@ function overlapComePuntitogordo(jugador, puntitogordo)
 
 function overlapJugadorFantasmas(jugador, fantasma)
 {
+    // En modo scary se puede comer, salvo si el fantasma ya volvió a casa
+    const comestible = Fantasma.es_comestible(fantasma);
+
     // Cheat "JON": Pac-Man es invulnerable y los fantasmas lo atraviesan,
     // pero en modo scary se les sigue pudiendo comer.
-    if (Settings.isInvulnerable() && !Settings.isFantasmasScary()) return;
+    if (Settings.isInvulnerable() && !comestible) return;
 
-    if (!Settings.isFantasmasScary())
+    if (!comestible)
     {
+        // Si muere con el modo scary activo (fantasma que ya volvió a casa), se acaba
+        this.fin_modo_scary();
+
         play_sonidos(this.sonido_jugadorDies, false, 0.7);
 
         jugador.disableBody(true, true);
@@ -83,8 +90,10 @@ function overlapJugadorFantasmas(jugador, fantasma)
     {
         play_sonidos(this.sonido_eatingGhost, false, 0.9);
 
+        // El fantasma desaparece y sus ojos vuelven a casa
         fantasma.setVisible(false);
-        this.ojos.get().getChildren()[fantasma.getData('id')].setVisible(true);
+        fantasma.setData('comido', true);
+        this.ojos.volver_a_casa(fantasma.getData('id'));
         Settings.pausa.comeFantasma = true;
 
         this.time.delayedCall(Settings.pausa.comeFantasmaDuracion, () => Settings.pausa.comeFantasma = false);
@@ -113,8 +122,8 @@ function overlapJugadorFantasmas(jugador, fantasma)
 
 function exceptoNotVisible(jugador, fantasma)
 {
-    if (!fantasma.visible || Settings.getInvisible()) return false;
-    return true;
+    // Los fantasmas comidos (invisibles, solo quedan los ojos) no chocan
+    return fantasma.visible;
 }
 
 function overlapJugadorCerezas(jugador, cerezas)

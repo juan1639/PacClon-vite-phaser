@@ -4,6 +4,7 @@ import { Game } from './scenes/Game';
 import { Congratulations } from './scenes/Congratulations';
 import { MainMenu } from './scenes/MainMenu';
 import { Preloader } from './scenes/Preloader';
+import { Pausa } from './scenes/Pausa';
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -28,7 +29,8 @@ const config = {
         Preloader,
         MainMenu,
         Game,
-        Congratulations
+        Congratulations,
+        Pausa   // la última para que se dibuje encima de Game
     ]
 };
 
