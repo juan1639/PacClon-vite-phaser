@@ -64,5 +64,8 @@ export class Congratulations extends Phaser.Scene
     this.timeline.play();
 
     play_sonidos(this.sonido_intermision, false, 0.8);
+
+    // Se destruye al terminar para no acumular sonidos en cada nivel
+    this.sonido_intermision.once('complete', sonido => sonido.destroy());
   }
 }

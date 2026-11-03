@@ -50,6 +50,9 @@ export class GameOver
     this.sonidoGameOver.play();
     this.sonidoGameOver.volume = 0.5;
 
+    // Se destruye al terminar para no acumular sonidos en cada partida
+    this.sonidoGameOver.once('complete', sonido => sonido.destroy());
+
     this.check_newRecord();
   }
 

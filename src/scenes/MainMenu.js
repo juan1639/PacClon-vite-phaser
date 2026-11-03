@@ -99,6 +99,9 @@ export class MainMenu extends Scene
 
         this.sonido_intermision.play();
         this.sonido_intermision.volume = 0.5;
+
+        // Se destruye al terminar para no acumular sonidos en cada vuelta al menú
+        this.sonido_intermision.once('complete', sonido => sonido.destroy());
     }
 
     detectar_cheat(event)

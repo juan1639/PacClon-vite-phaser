@@ -91,7 +91,8 @@ export class Jugador
             const x = Math.floor(this.jugador.x / Settings.tileXY.x) + direcc[this.intentoGiro][0];
             const y = Math.floor(this.jugador.y / Settings.tileXY.y) + direcc[this.intentoGiro][1];
             
-            if (Laberinto.array_laberinto[y][x] !== 9)
+            // es_transitable evita salir del laberinto (y el cuelgue) al girar en el túnel
+            if (Laberinto.es_transitable(x, y))
             {
                 this.direccion = this.intentoGiro;
                 this.jugador.setAngle(direcc[this.direccion][4]);
@@ -106,9 +107,9 @@ export class Jugador
         const x = Math.floor((this.jugador.x + offsetX + ancho) / Settings.tileXY.x);
         const y = Math.floor((this.jugador.y + offsetY + alto) / Settings.tileXY.y);
 
-        if (Laberinto.array_laberinto[y][x] !== 9)
+        if (Laberinto.es_transitable(x, y))
         {
-            this.jugador.x += direcc[this.direccion][0] * Jugador.VEL;
+            this.jugador.x +=direcc[this.direccion][0] * Jugador.VEL;
             this.jugador.y += direcc[this.direccion][1] * Jugador.VEL;
 
             // Escapatorias

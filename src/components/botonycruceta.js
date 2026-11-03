@@ -26,8 +26,10 @@ export class CrucetaDireccion
           this.boton.setScale(scX + 0.1, scY + 0.1);
         });
 
+        // Al sacar el dedo del botón también se suelta (si no, se quedaba pulsado)
         this.boton.on('pointerout', () => {
           this.boton.setScale(scX, scY);
+          this.isDown = false;
         });
 
         this.boton.on('pointerdown', () => {
@@ -37,6 +39,11 @@ export class CrucetaDireccion
         this.boton.on('pointerup', () => {
             this.isDown = false;
         });
+
+        // Soltar en cualquier parte de la pantalla (o fuera del canvas) también cuenta.
+        // Phaser quita estos listeners de la escena al hacer shutdown.
+        this.relatedScene.input.on('pointerup', () => this.isDown = false);
+        this.relatedScene.input.on('pointerupoutside', () => this.isDown = false);
     }
     
     get()

@@ -188,11 +188,18 @@ export class Game extends Phaser.Scene
   {
     this.parar_timers_scary();
 
-    // El sonido es global entre escenas: si no se para, sigue sonando
-    // en el menú o en la pantalla de congratulations.
-    if (this.sonido_fantasmasScary) this.sonido_fantasmasScary.stop();
-    if (this.sonido_sirena) this.sonido_sirena.stop();
-    if (this.sonido_preparado) this.sonido_preparado.stop();
+    // Los sonidos son globales entre escenas: si no se destruyen, siguen
+    // sonando en otra escena y se acumulan en el gestor de sonido en cada nivel.
+    // destroy() también los para.
+    [
+      this.sonido_preparado,
+      this.sonido_waka,
+      this.sonido_jugadorDies,
+      this.sonido_eatingGhost,
+      this.sonido_eatingCherry,
+      this.sonido_fantasmasScary,
+      this.sonido_sirena
+    ].forEach(sonido => { if (sonido) sonido.destroy(); });
   }
 
   set_pausaInicial(tiempo)
