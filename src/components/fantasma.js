@@ -68,10 +68,10 @@ export class Fantasma
             fant.setData('intentoGiro', 'right');
             fant.setData('direccion', 'right');
             fant.setData('id', index);
-            // comido: sus ojos vuelven a casa (el fantasma está invisible y quieto)
-            // recuperado: ya volvió a casa durante el modo scary; vuelve a ser peligroso
+            // comido: el fantasma está invisible y quieto; sus ojos vuelven a casa
+            // esperando: los ojos ya llegaron a casa y esperan a que acabe el modo scary
             fant.setData('comido', false);
-            fant.setData('recuperado', false);
+            fant.setData('esperando', false);
             fant.setCircle(
                 Math.floor(Settings.tileXY.y / 3),
                 Math.floor(Settings.tileXY.x / 12),
@@ -128,6 +128,10 @@ export class Fantasma
                     fant.setTint(Phaser.Display.Color.GetColor(20, Phaser.Math.Between(60, 200), Phaser.Math.Between(125, 255)));
                 }
             }
+
+            // En modo scary van a la mitad de velocidad: un paso de VEL px solo
+            // en los frames pares (cambiar VEL rompería la alineación con las casillas)
+            if (Fantasma.es_comestible(fant) && this.contador_frames % 2 === 1) return;
 
             this.mover(fant, index);
 
@@ -197,10 +201,11 @@ export class Fantasma
         }
     }
 
-    // En modo scary se puede comer, salvo si ya volvió a casa (recuperado)
+    // En modo scary todos los fantasmas visibles se pueden comer (los comidos
+    // son invisibles y ya los descarta exceptoNotVisible)
     static es_comestible(fant)
     {
-        return Settings.isFantasmasScary() && !fant.getData('recuperado');
+        return Settings.isFantasmasScary();
     }
 
     // Umbral para Phaser.Math.Between(0, 10): igual que antes en el nivel 1,
@@ -288,15 +293,11 @@ export class Fantasma
         return duracion;
     }
 
-    // Fin del modo scary (o nuevo puntito gordo): quita el tinte y el estado "recuperado".
-    // Los fantasmas comidos no reaparecen aquí: lo hacen cuando sus ojos llegan a casa.
+    // Fin del modo scary (o nuevo puntito gordo): quita el tinte.
+    // Los comidos reaparecen con OjosFantasma.liberar_esperando() al acabar el modo scary.
     quitar_scary()
     {
-        this.fantasmas.children.iterate(fant =>
-        {
-            fant.clearTint();
-            fant.setData('recuperado', false);
-        });
+        this.fantasmas.children.iterate(fant => fant.clearTint());
     }
 
     get()
@@ -502,15 +503,42 @@ export class OjosFantasma
         const fant = this.relatedScene.fantasmas.get().getChildren()[index];
         const casa = Settings.fantasmasIniXY[Object.keys(Settings.fantasmasIniXY)[index]];
 
+        fant.setPosition(casa[0] * Settings.tileXY.x, casa[1] * Settings.tileXY.y);
+
+        // Con el modo scary activo, los ojos se quedan en casa hasta que acabe
+        if (Settings.isFantasmasScary())
+        {
+            fant.setData('esperando', true);
+            ojos.anims.play('anim50', true);
+            return;
+        }
+
+        this.reaparecer(index);
+    }
+
+    // El fantasma vuelve a aparecer (normal) en su casa y se ocultan los ojos
+    reaparecer(index)
+    {
+        const ojos = this.ojosfantasma.getChildren()[index];
+        const fant = this.relatedScene.fantasmas.get().getChildren()[index];
+
         ojos.setVisible(false).setData('volviendo', false);
 
-        fant.setPosition(casa[0] * Settings.tileXY.x, casa[1] * Settings.tileXY.y);
         fant.setData('comido', false);
-        // Si el modo scary sigue activo, reaparece ya normal: persigue y es peligroso
-        fant.setData('recuperado', Settings.isFantasmasScary());
+        fant.setData('esperando', false);
         fant.clearTint();
 
         if (!Settings.isGameOver()) fant.setVisible(true);
+    }
+
+    // Fin del modo scary: reaparecen los fantasmas cuyos ojos esperaban en casa.
+    // Los que aún van de camino reaparecen al llegar (ya sin modo scary).
+    liberar_esperando()
+    {
+        this.relatedScene.fantasmas.get().children.iterate((fant, index) =>
+        {
+            if (fant.getData('esperando')) this.reaparecer(index);
+        });
     }
 
     // Animación de los ojos según hacia dónde se mueven

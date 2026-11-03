@@ -26,7 +26,6 @@ function overlapComePuntitogordo(jugador, puntitogordo)
 
 function overlapJugadorFantasmas(jugador, fantasma)
 {
-    // En modo scary se puede comer, salvo si el fantasma ya volvió a casa
     const comestible = Fantasma.es_comestible(fantasma);
 
     // Cheat "JON": Pac-Man es invulnerable y los fantasmas lo atraviesan,
@@ -35,9 +34,6 @@ function overlapJugadorFantasmas(jugador, fantasma)
 
     if (!comestible)
     {
-        // Si muere con el modo scary activo (fantasma que ya volvió a casa), se acaba
-        this.fin_modo_scary();
-
         play_sonidos(this.sonido_jugadorDies, false, 0.7);
 
         jugador.disableBody(true, true);

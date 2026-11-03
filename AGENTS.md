@@ -33,8 +33,10 @@ Clon de Pac-Man hecho con Phaser 3.90 y Vite 5, en JavaScript (módulos ES, sin 
 - **Modo scary** (al comer un puntito gordo): lo controla `Game` con timers de escena (`iniciar_modo_scary`, `fin_modo_scary`, `parar_timers_scary`).
   Usar siempre `this.time.delayedCall` / timelines de escena, nunca `setTimeout`, para que se cancelen al cambiar de escena.
   Cada fantasma tiene dos datos: `comido` (está invisible y sus ojos vuelven a casa por el laberinto con `OjosFantasma.volver_a_casa()`,
-  que usa `Laberinto.camino()` y una cadena de tweens) y `recuperado` (reapareció en casa durante el modo scary: es peligroso).
-  Para saber si un fantasma se puede comer, usar `Fantasma.es_comestible(fant)`, no solo `Settings.isFantasmasScary()`.
+  que usa `Laberinto.camino()` y una cadena de tweens) y `esperando` (los ojos ya llegaron a casa y esperan ahí a que acabe
+  el modo scary; `OjosFantasma.liberar_esperando()`, llamado desde `fin_modo_scary`, hace reaparecer al fantasma).
+  Si los ojos llegan cuando el modo scary ya ha acabado, el fantasma reaparece al momento.
+  En modo scary los fantasmas van a la mitad de velocidad: solo se mueven en los frames pares (no se cambia `VEL`).
 - **Sonidos:** son globales entre escenas; los que tengan bucle hay que pararlos en `shutdown()` de la escena (ver `Game.shutdown`).
   La pausa usa `sound.pauseAll()` / `resumeAll()`: para cortar un sonido usar `stop()`, no `pause()`, o se reanudaría al quitar la pausa.
   El silencio (`Settings.silencio`, guardado en `localStorage`) se aplica con `sound.mute` en `Boot` y lo cambia `BotonSilencio`.

@@ -179,6 +179,7 @@ export class Game extends Phaser.Scene
     if (!estaba_activo) return;
 
     this.fantasmas.quitar_scary();
+    this.ojos.liberar_esperando();
     // NORMAL: con 'ERASE' los fantasmas se pintaban como agujeros/siluetas
     this.fantasmas.get().setBlendMode(Phaser.BlendModes.NORMAL);
     // stop() y no pause(): al quitar la pausa (tecla P) se reanudan los sonidos pausados
