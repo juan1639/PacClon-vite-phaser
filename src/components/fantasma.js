@@ -20,6 +20,19 @@ export class Fantasma
         down: ['right', 'left', 'up']
     };
 
+    // Dirección contraria (en modo scary los fantasmas huyen)
+    static OPUESTA = {
+        left: 'right',
+        right: 'left',
+        up: 'down',
+        down: 'up'
+    };
+
+    // Paso extra de 4 px cada N frames para subir la velocidad sin tocar VEL
+    // (VEL debe dividir a 64). 0 = nunca. Ajustar aquí la dificultad.
+    static PASO_EXTRA_NIVEL_3 = 4;   // niveles 3-4: ~5 px/frame
+    static PASO_EXTRA_NIVEL_5 = 3;   // nivel 5 en adelante: ~5,3 px/frame
+
     // Algunos ptos del Laberinto donde los fantasmas pueden cambiar de direccion
     static ptosClave = [
         [4, 1], [14, 1],
@@ -78,13 +91,20 @@ export class Fantasma
 
             fant.anims.play(`anim${index}0`, true);
         });
+
+        // Cuenta los frames en movimiento (para el paso extra)
+        this.contador_frames = 0;
     }
 
     update()
     {
         if (!this.relatedScene.jugador.get().body.enable || Settings.pausa.comeFantasma || Settings.pausa.nivelSuperado) return;
 
-        const direcc = Fantasma.INFO_DIRECCION;
+        this.contador_frames ++;
+
+        // En modo scary no hay paso extra (van a la velocidad normal)
+        const cada = Fantasma.frames_paso_extra();
+        const pasoExtra = cada > 0 && !Settings.isFantasmasScary() && this.contador_frames % cada === 0;
 
         this.fantasmas.children.iterate((fant, index) =>
         {
@@ -100,60 +120,89 @@ export class Fantasma
                 }
             }
 
-            let x = 0;
-            let y = 0;
-            let perseguir;
+            this.mover(fant, index);
 
-            for (let i = 0; i < Fantasma.ptosClave.length; i ++)
-            {
-                let pClaveX = Fantasma.ptosClave[i][0] * Settings.tileXY.x;
-                let pClaveY = Fantasma.ptosClave[i][1] * Settings.tileXY.y;
+            // El paso extra repite la lógica completa, así siempre se pasa
+            // por las casillas exactas y se puede girar en los cruces
+            if (pasoExtra) this.mover(fant, index);
+        });
+    }
 
-                if (fant.x == pClaveX && fant.y == pClaveY)
-                {
-                    perseguir = Phaser.Math.Between(0, 10);
+    // Un paso de VEL px: puntos clave, colisión con paredes y escapatorias
+    mover(fant, index)
+    {
+        const direcc = Fantasma.INFO_DIRECCION;
 
-                    if (perseguir < 7 + Settings.getNivel())
-                    {
-                        this.fantasma_persigue(fant);
-                        this.set_flips(fant, index);
-                    }
-                }
-            }
+        let x = 0;
+        let y = 0;
+        let perseguir;
 
-            x = Math.floor(
-                (fant.x + direcc[fant.getData('direccion')][0] +
-                    Settings.tileXY.x * direcc[fant.getData('direccion')][2]) / Settings.tileXY.x);
-            
-            y = Math.floor(
-                (fant.y + direcc[fant.getData('direccion')][1] +
-                    Settings.tileXY.y * direcc[fant.getData('direccion')][3]) / Settings.tileXY.y);
-            
-            if (!(Laberinto.check_colision(x, y)))
-            {
+        for (let i = 0; i < Fantasma.ptosClave.length; i ++)
+        {
+            let pClaveX = Fantasma.ptosClave[i][0] * Settings.tileXY.x;
+            let pClaveY = Fantasma.ptosClave[i][1] * Settings.tileXY.y;
 
-                fant.x += direcc[fant.getData('direccion')][0] * Fantasma.VEL;
-                fant.y += direcc[fant.getData('direccion')][1] * Fantasma.VEL;
-
-                // Escapatorias
-                if (fant.x > Laberinto.array_laberinto[0].length * Settings.tileXY.x && fant.getData('direccion') === 'right') fant.x = -Settings.tileXY.x;
-                if (fant.x < -Settings.tileXY.x && fant.getData('direccion') === 'left') fant.x = (Laberinto.array_laberinto[0].length - 1) * Settings.tileXY.x;
-
-            } else
+            if (fant.x == pClaveX && fant.y == pClaveY)
             {
                 perseguir = Phaser.Math.Between(0, 10);
 
-                if (perseguir < 5 + Settings.getNivel()) {
-                    this.fantasma_persigue(fant);
-                    
-                } else
+                if (perseguir < Fantasma.umbral_persecucion(7))
                 {
-                    fant.setData('direccion', this.elegir_otra_direccion(direcc, fant));
+                    this.fantasma_persigue(fant);
+                    this.set_flips(fant, index);
                 }
-
-                this.set_flips(fant, index);
             }
-        });
+        }
+
+        x = Math.floor(
+            (fant.x + direcc[fant.getData('direccion')][0] +
+                Settings.tileXY.x * direcc[fant.getData('direccion')][2]) / Settings.tileXY.x);
+
+        y = Math.floor(
+            (fant.y + direcc[fant.getData('direccion')][1] +
+                Settings.tileXY.y * direcc[fant.getData('direccion')][3]) / Settings.tileXY.y);
+
+        if (!(Laberinto.check_colision(x, y)))
+        {
+
+            fant.x += direcc[fant.getData('direccion')][0] * Fantasma.VEL;
+            fant.y += direcc[fant.getData('direccion')][1] * Fantasma.VEL;
+
+            // Escapatorias
+            if (fant.x > Laberinto.array_laberinto[0].length * Settings.tileXY.x && fant.getData('direccion') === 'right') fant.x = -Settings.tileXY.x;
+            if (fant.x < -Settings.tileXY.x && fant.getData('direccion') === 'left') fant.x = (Laberinto.array_laberinto[0].length - 1) * Settings.tileXY.x;
+
+        } else
+        {
+            perseguir = Phaser.Math.Between(0, 10);
+
+            if (perseguir < Fantasma.umbral_persecucion(5)) {
+                this.fantasma_persigue(fant);
+
+            } else
+            {
+                fant.setData('direccion', this.elegir_otra_direccion(direcc, fant));
+            }
+
+            this.set_flips(fant, index);
+        }
+    }
+
+    // Umbral para Phaser.Math.Between(0, 10): igual que antes en el nivel 1,
+    // pero crece la mitad de rápido (antes era base + nivel)
+    static umbral_persecucion(base)
+    {
+        return base + Math.ceil(Settings.getNivel() / 2);
+    }
+
+    // Cada cuántos frames dan los fantasmas un paso extra (0 = nunca)
+    static frames_paso_extra()
+    {
+        const nivel = Settings.getNivel();
+
+        if (nivel >= 5) return Fantasma.PASO_EXTRA_NIVEL_5;
+        if (nivel >= 3) return Fantasma.PASO_EXTRA_NIVEL_3;
+        return 0;
     }
 
     elegir_otra_direccion(direcc, fant)
@@ -187,6 +236,12 @@ export class Fantasma
                 fant.setData('direccion', 'left');
             }
         }
+
+        // En modo scary huyen: dirección contraria a la de perseguir
+        if (Settings.isFantasmasScary())
+        {
+            fant.setData('direccion', Fantasma.OPUESTA[fant.getData('direccion')]);
+        }
     }
 
     set_flips(fant, index)
@@ -211,9 +266,10 @@ export class Fantasma
 
     duracion_scary()
     {
-        let duracion = Settings.getFantasmasScaryDuracion() - Settings.getNivel() * 900;
+        // Nivel 1: 8100 ms (como antes); baja 450 ms por nivel hasta un mínimo de 2500 ms
+        let duracion = Settings.getFantasmasScaryDuracion() - 900 - (Settings.getNivel() - 1) * 450;
 
-        if (duracion < 1900) return 1900;
+        if (duracion < 2500) return 2500;
         return duracion;
     }
 

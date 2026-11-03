@@ -156,6 +156,8 @@ export class JugadorDies
 // ================================================================================
 export class JugadorShowVidas
 {
+    static MAX_ICONOS = 4;
+
     constructor(scene, args)
     {
         this.relatedScene = scene;
@@ -166,10 +168,11 @@ export class JugadorShowVidas
     {
         const { left, top } = this.args;
 
+        // Siempre 4 iconos (3 vidas iniciales + 1 extra); refrescar() muestra los que tocan
         this.jugadorshowvidas = this.relatedScene.physics.add.group(
         {
             key: ['pacman'],
-            frameQuantity: Settings.getVidas(),
+            frameQuantity: JugadorShowVidas.MAX_ICONOS,
             setXY: {
                 x: left,
                 y: top,
@@ -181,6 +184,17 @@ export class JugadorShowVidas
         this.jugadorshowvidas.children.iterate(vida =>
         {
             vida.setOrigin(0.5, 0).setScale(1, 0.7).setBlendMode(Phaser.BlendModes.ADD);
+        });
+
+        this.refrescar();
+    }
+
+    // Muestra tantos iconos como vidas quedan
+    refrescar()
+    {
+        this.jugadorshowvidas.children.iterate((vida, index) =>
+        {
+            vida.setVisible(index < Settings.getVidas());
         });
     }
 

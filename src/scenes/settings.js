@@ -37,6 +37,12 @@ export class Settings
     static vidas = 3;
     static gameOver = false;
 
+    // Una vida extra por partida (se reinicia en MainMenu.init, no en cada nivel)
+    static vidaExtra = {
+        puntos: 10000,
+        conseguida: false
+    };
+
     static txtScore = ' Score: ';
 
     static pausa = {
@@ -186,6 +192,16 @@ export class Settings
         return Settings.gameOver;
     }
 
+    static getPuntosVidaExtra()
+    {
+        return Settings.vidaExtra.puntos;
+    }
+
+    static isVidaExtraConseguida()
+    {
+        return Settings.vidaExtra.conseguida;
+    }
+
     static isBotonesYcruceta()
     {
         return Settings.botonesYcruceta;
@@ -271,6 +287,11 @@ export class Settings
     static setGameOver(bool)
     {
         Settings.gameOver = bool;
+    }
+
+    static setVidaExtraConseguida(bool)
+    {
+        Settings.vidaExtra.conseguida = bool;
     }
 
     static setBotonesYcruceta(bool)

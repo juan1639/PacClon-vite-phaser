@@ -21,10 +21,14 @@ Clon de Pac-Man hecho con Phaser 3.90 y Vite 5, en JavaScript (módulos ES, sin 
 - **Movimiento por casillas:** jugador y fantasmas se mueven en una rejilla de 64 px (`Settings.tileXY`) a `VEL = 4` px por frame.
   Los giros dependen de `x % 64 === 0` (jugador) y de comparar posiciones exactas con `Fantasma.ptosClave` (fantasmas).
   Por eso **`VEL` debe dividir a 64** (1, 2, 4, 8, 16...): con otro valor nunca llegan a una casilla exacta y dejan de girar.
+  Para subir la velocidad de los fantasmas en niveles altos no se toca `VEL`: `Fantasma.update()` da un "paso extra"
+  (llama dos veces a `mover()`) cada N frames (`PASO_EXTRA_NIVEL_3`, `PASO_EXTRA_NIVEL_5`). No hay paso extra en modo scary.
 - **Laberinto:** matriz `Laberinto.array_laberinto` (19 columnas). Valores: `9` pared, `1` puntito, `5` puntito gordo, `0` vacío.
   Las salidas laterales (escapatorias) se gestionan en el `update()` de `Jugador` y `Fantasma`.
 - **Estado global en `Settings`:** puntos, vidas, nivel, récord, modo scary, pausas, etc. son estáticos y compartidos entre escenas.
   Se reinician en `MainMenu.init()` (partida nueva) y `Game.init()` (cada nivel). **Cualquier estado nuevo debe reiniciarse también ahí.**
+  Excepción: `Settings.vidaExtra` (una vida extra a los 10 000 puntos, una vez por partida) solo se reinicia en `MainMenu.init()`.
+  Los puntos se suman y luego se llama a `actualizar_puntos(scene)` (`functions.js`), que actualiza el marcador y da la vida extra.
 - **Modo scary** (al comer un puntito gordo): lo controla `Game` con timers de escena (`iniciar_modo_scary`, `fin_modo_scary`, `parar_timers_scary`).
   Usar siempre `this.time.delayedCall` / timelines de escena, nunca `setTimeout`, para que se cancelen al cambiar de escena.
 - **Sonidos:** son globales entre escenas; los que tengan bucle hay que pararlos en `shutdown()` de la escena (ver `Game.shutdown`).

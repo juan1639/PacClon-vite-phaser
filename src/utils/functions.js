@@ -4,7 +4,7 @@ import { Textos } from "../components/Textos.js";
 function overlapComePuntitos(jugador, puntito)
 {
     suma_puntos(puntito);
-    this.marcadorPtos.update(Settings.getTxtScore(), Settings.getPuntos());
+    actualizar_puntos(this);
     puntito.disableBody(true, true);
     play_sonidos(this.sonido_waka, false, 0.9);
 }
@@ -12,7 +12,7 @@ function overlapComePuntitos(jugador, puntito)
 function overlapComePuntitogordo(jugador, puntitogordo)
 {
     suma_puntos(puntitogordo);
-    this.marcadorPtos.update(Settings.getTxtScore(), Settings.getPuntos());
+    actualizar_puntos(this);
 
     puntitogordo.disableBody(true, true);
 
@@ -59,10 +59,7 @@ function overlapJugadorFantasmas(jugador, fantasma)
                     // this.cameras.main.startFollow(this.gameover.get());
                 }
 
-                this.jugadorshowvidas.get().children.iterate((vida, index) =>
-                {
-                    if (index === Settings.getVidas()) vida.setVisible(false);
-                });
+                this.jugadorshowvidas.refrescar();
 
                 this.fantasmas.get().children.iterate((fant, index) =>
                 {
@@ -107,7 +104,7 @@ function overlapJugadorFantasmas(jugador, fantasma)
 
         const bonus = Settings.getPuntos() + Settings.getFantasmasBonusInc().puntos[Settings.getFantasmasBonusInc().contador];
         Settings.setPuntos(bonus);
-        this.marcadorPtos.update(Settings.getTxtScore(), Settings.getPuntos());
+        actualizar_puntos(this);
 
         Settings.setFantasmasBonusInc(Settings.getFantasmasBonusInc().contador + 1);
         if (Settings.getFantasmasBonusInc().contador >= 4) Settings.setFantasmasBonusInc(0);
@@ -123,7 +120,7 @@ function exceptoNotVisible(jugador, fantasma)
 function overlapJugadorCerezas(jugador, cerezas)
 {
     suma_puntos(cerezas);
-    this.marcadorPtos.update(Settings.getTxtScore(), Settings.getPuntos());
+    actualizar_puntos(this);
     cerezas.disableBody(true, true);
     play_sonidos(this.sonido_eatingCherry, false, 0.9);
 
@@ -172,6 +169,36 @@ function suma_puntos(puntos)
     Settings.setPuntos(bonus);
 }
 
+// Actualiza el marcador de puntos y da la vida extra al llegar a los puntos
+// (una sola vez por partida). Se llama siempre que se suman puntos.
+function actualizar_puntos(scene)
+{
+    scene.marcadorPtos.update(Settings.getTxtScore(), Settings.getPuntos());
+
+    if (Settings.isVidaExtraConseguida() || Settings.getPuntos() < Settings.getPuntosVidaExtra()) return;
+
+    Settings.setVidaExtraConseguida(true);
+    Settings.setVidas(Settings.getVidas() + 1);
+    scene.jugadorshowvidas.refrescar();
+
+    play_sonidos(scene.sonido_eatingCherry, false, 0.9);
+
+    const jugador = scene.jugador.get();
+
+    scene.txt_vidaextra = new Textos(scene, {
+        x: jugador.x, y: jugador.y,
+        txt: ' Extra Life! ',
+        size: 50, color: '#ffa', style: 'bold',
+        stroke: '#5f1', sizeStroke: 16,
+        shadowOsx: 2, shadowOsy: 2, shadowColor: '#111111',
+        bool1: false, bool2: true, origin: [0.5, 0.5],
+        elastic: jugador.y - Settings.tileXY.y * 2, dura: 2000
+    });
+
+    scene.txt_vidaextra.create();
+    scene.txt_vidaextra.get().setDepth(Settings.getDepth().textos).setAlpha(1);
+}
+
 function restar_vida()
 {
     const actualizar = Settings.getVidas() - 1;
@@ -193,6 +220,7 @@ export {
     overlapJugadorCerezas,
     particulas,
     suma_puntos,
+    actualizar_puntos,
     restar_vida,
     play_sonidos
 };

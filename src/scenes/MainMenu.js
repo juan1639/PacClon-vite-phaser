@@ -22,6 +22,7 @@ export class MainMenu extends Scene
         Settings.setFantasmasScary(false);
         Settings.setBotonesYcruceta(false);
         Settings.setFantasmasBonusInc(0);
+        Settings.setVidaExtraConseguida(false);
 
         // Teclas pulsadas para detectar el cheat "J-O-N"
         this.cheatBuffer = [];
