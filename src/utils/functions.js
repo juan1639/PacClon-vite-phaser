@@ -23,12 +23,6 @@ function overlapComePuntitogordo(jugador, puntitogordo)
     play_sonidos(this.sonido_eatingGhost, false, 0.9);
 }
 
-function exceptoScary()
-{
-    if (Settings.isFantasmasScary()) return false;
-    return true;
-}
-
 function overlapJugadorFantasmas(jugador, fantasma)
 {
     if (!Settings.isFantasmasScary())
@@ -45,14 +39,15 @@ function overlapJugadorFantasmas(jugador, fantasma)
             {
                 this.jugadordies.get().disableBody(true, true);
                 this.jugador.get().enableBody(
-                    true, Settings.pacman.iniX * Settings.tileXY.x, Settings.pacman.iniY * Settings.tileXY.x, true, true
+                    true, Settings.pacman.iniX * Settings.tileXY.x, Settings.pacman.iniY * Settings.tileXY.y, true, true
                 );
                 this.jugador.intentoGiro = 'right';
                 this.jugador.direccion = 'right';
 
                 restar_vida();
 
-                if (Settings.getVidas() < 0)
+                // 3 vidas en total: al perder la tercera (vidas = 0) es game over
+                if (Settings.getVidas() <= 0)
                 {
                     Settings.setGameOver(true);
                     this.jugador.get().setVisible(false);
@@ -189,7 +184,6 @@ function play_sonidos(id, boolLoop, volumen)
 export {
     overlapComePuntitos,
     overlapComePuntitogordo,
-    exceptoScary,
     overlapJugadorFantasmas,
     exceptoNotVisible,
     overlapJugadorCerezas,

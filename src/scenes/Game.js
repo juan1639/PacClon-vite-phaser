@@ -19,7 +19,6 @@ import { GameOver } from '../components/game-over.js';
 import {
   overlapComePuntitos,
   overlapComePuntitogordo,
-  exceptoScary,
   overlapJugadorFantasmas,
   overlapJugadorCerezas,
   exceptoNotVisible,
@@ -116,19 +115,20 @@ export class Game extends Phaser.Scene
       this.cerezas.update();
     }
 
-    if (this.puntito.get().countActive() <= 0 && !Settings.pausa.nivelSuperado)
-    {
-      if (this.sonido_fantasmasScary.isPlaying) this.sonido_fantasmasScary.pause();
+    // El nivel termina cuando no quedan ni puntitos normales ni gordos
+    const quedanPuntitos = this.puntito.get().countActive() > 0 || this.puntitogordo.get().countActive() > 0;
 
+    if (!quedanPuntitos && !Settings.pausa.nivelSuperado)
+    {
       Settings.pausa.nivelSuperado = true;
-      Settings.setFantasmasScary(false);
+      this.fin_modo_scary();
       this.texto_enhorabuena();
 
-      setTimeout(() =>
+      this.time.delayedCall(Settings.pausa.nivelSuperadoDuracion, () =>
       {
         Settings.pausa.nivelSuperado = false;
         this.scene.start('congratulations');
-      }, Settings.pausa.nivelSuperadoDuracion);
+      });
     }
     
     this.mobile_controls();
@@ -250,8 +250,8 @@ export class Game extends Phaser.Scene
     //Overlap Jugador-Puntitos
     this.physics.add.overlap(this.jugador.get(), this.puntito.get(), overlapComePuntitos, null, this);
     
-    //Overlap Jugador-PuntitosGordos
-    this.physics.add.overlap(this.jugador.get(), this.puntitogordo.get(), overlapComePuntitogordo, exceptoScary, this);
+    //Overlap Jugador-PuntitosGordos (se pueden comer siempre)
+    this.physics.add.overlap(this.jugador.get(), this.puntitogordo.get(), overlapComePuntitogordo, null, this);
 
     //Overlap Jugador-Fantasmas
     this.physics.add.overlap(this.jugador.get(), this.fantasmas.get(), overlapJugadorFantasmas, exceptoNotVisible, this);
