@@ -15,27 +15,12 @@ function overlapComePuntitogordo(jugador, puntitogordo)
     this.marcadorPtos.update(Settings.getTxtScore(), Settings.getPuntos());
 
     puntitogordo.disableBody(true, true);
-    Settings.setFantasmasScary(true);
 
-    setTimeout(() =>
-    {
-        Settings.setFantasmasScary(false);
-        Settings.setFantasmasIntermitente(false);
-        this.fantasmas.clear_tint();
-        this.fantasmas.get().setBlendMode('ERASE');
-        this.sonido_fantasmasScary.pause();
-        Settings.setFantasmasBonusInc(0);
-
-    }, this.fantasmas.duracion_scary());
-
-    setTimeout(() =>
-    {
-        Settings.setFantasmasIntermitente(true);
-
-    }, Math.floor(this.fantasmas.duracion_scary() / 1.5));
+    // El modo scary (y sus timers) lo controla la escena Game, para poder
+    // reiniciarlo o cancelarlo sin acumular temporizadores.
+    this.iniciar_modo_scary();
 
     play_sonidos(this.sonido_eatingGhost, false, 0.9);
-    setTimeout(() => play_sonidos(this.sonido_fantasmasScary, true, 0.9), 500);
 }
 
 function exceptoScary()
@@ -106,7 +91,7 @@ function overlapJugadorFantasmas(jugador, fantasma)
         this.ojos.get().getChildren()[fantasma.getData('id')].setVisible(true);
         Settings.pausa.comeFantasma = true;
 
-        setTimeout(() => Settings.pausa.comeFantasma = false, Settings.pausa.comeFantasmaDuracion);
+        this.time.delayedCall(Settings.pausa.comeFantasmaDuracion, () => Settings.pausa.comeFantasma = false);
 
         this.txt_bonusfantasmas = new Textos(this, {
           x: jugador.x, y: jugador.y,
@@ -156,7 +141,8 @@ function overlapJugadorCerezas(jugador, cerezas)
     this.txt_bonuscerezas.create();
     this.txt_bonuscerezas.get().setDepth(Settings.getDepth().textos).setAlpha(1);
 
-    setTimeout(() =>
+    // Timer de la escena: se cancela solo si se reinicia/cambia de escena
+    this.time.delayedCall(15000, () =>
     {
         this.cerezas.get().enableBody(
             true,
@@ -164,7 +150,7 @@ function overlapJugadorCerezas(jugador, cerezas)
             Settings.getCerezasIniXY()[1] * Settings.tileXY.y,
             true, true
         );
-    }, 15000);
+    });
 }
 
 function particulas(x, y, particula, vel, span, size, color, sprite, bool, scene)

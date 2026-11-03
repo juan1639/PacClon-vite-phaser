@@ -292,7 +292,12 @@ export class FantasmaPreGame
                 repeat: -1
             });
 
-            setInterval(() => {fant.setFlipX(!fant.flipX)}, duracionTotal);
+            // Timer de la escena (se limpia solo al cambiar de escena)
+            this.relatedScene.time.addEvent({
+                delay: duracionTotal,
+                loop: true,
+                callback: () => fant.setFlipX(!fant.flipX)
+            });
         });
     }
 }

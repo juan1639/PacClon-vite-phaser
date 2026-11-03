@@ -37,7 +37,16 @@ export class Game extends Phaser.Scene
   {
     Settings.setGameOver(false);
     Settings.setFantasmasScary(false);
+    Settings.setFantasmasIntermitente(false);
     Settings.setFantasmasBonusInc(0);
+
+    // Pausas que ahora usan timers de escena: si la escena se reinicia
+    // mientras están activas, hay que dejarlas limpias.
+    Settings.pausa.comeFantasma = false;
+    Settings.pausa.nivelSuperado = false;
+
+    // Timers del modo scary (se recrean cada vez que se come un puntito gordo)
+    this.timers_scary = null;
 
     this.set_pausaInicial(Settings.pausa.inicial);
 
@@ -61,6 +70,9 @@ export class Game extends Phaser.Scene
 
   create()
   {
+    // Al salir de la escena hay que parar timers y sonidos propios
+    this.events.once('shutdown', this.shutdown, this);
+
     this.add.image(0, 0, 'fondo').setOrigin(0, 0);
     
     this.set_sonidos();
@@ -120,6 +132,67 @@ export class Game extends Phaser.Scene
     }
     
     this.mobile_controls();
+  }
+
+  // ---------------------------------------------------------------------
+  //  Modo scary: los timers viven en la escena para poder cancelarlos
+  //  (antes eran setTimeout globales que sobrevivían al reinicio).
+  // ---------------------------------------------------------------------
+  iniciar_modo_scary()
+  {
+    // Si ya estaba activo (otro puntito gordo), reinicia los tiempos
+    this.parar_timers_scary();
+
+    Settings.setFantasmasScary(true);
+    Settings.setFantasmasIntermitente(false);
+
+    const duracion = this.fantasmas.duracion_scary();
+
+    this.timers_scary = [
+      // La música de fondo empieza después del sonido de comer
+      this.time.delayedCall(500, () => play_sonidos(this.sonido_fantasmasScary, true, 0.9)),
+      // Los fantasmas parpadean como aviso antes de volver a la normalidad
+      this.time.delayedCall(Math.floor(duracion / 1.5), () => Settings.setFantasmasIntermitente(true)),
+      // Fin del modo scary
+      this.time.delayedCall(duracion, () => this.fin_modo_scary())
+    ];
+  }
+
+  fin_modo_scary()
+  {
+    this.parar_timers_scary();
+
+    const estaba_activo = Settings.isFantasmasScary();
+
+    Settings.setFantasmasScary(false);
+    Settings.setFantasmasIntermitente(false);
+
+    if (!estaba_activo) return;
+
+    this.fantasmas.clear_tint();
+    this.fantasmas.get().setBlendMode('ERASE');
+    this.sonido_fantasmasScary.pause();
+    Settings.setFantasmasBonusInc(0);
+  }
+
+  parar_timers_scary()
+  {
+    if (!this.timers_scary) return;
+
+    this.timers_scary.forEach(timer => timer.remove(false));
+    this.timers_scary = null;
+  }
+
+  // Phaser no llama solo a este método: se registra con 'shutdown' en create()
+  shutdown()
+  {
+    this.parar_timers_scary();
+
+    // El sonido es global entre escenas: si no se para, sigue sonando
+    // en el menú o en la pantalla de congratulations.
+    if (this.sonido_fantasmasScary) this.sonido_fantasmasScary.stop();
+    if (this.sonido_sirena) this.sonido_sirena.stop();
+    if (this.sonido_preparado) this.sonido_preparado.stop();
   }
 
   set_pausaInicial(tiempo)

@@ -225,6 +225,11 @@ export class JugadorPreGame
             repeat: -1
         });
 
-        setInterval(() => {this.jugadorpregame.setFlipX(!this.jugadorpregame.flipX)}, duracionTotal);
+        // Timer de la escena (se limpia solo al cambiar de escena)
+        this.relatedScene.time.addEvent({
+            delay: duracionTotal,
+            loop: true,
+            callback: () => this.jugadorpregame.setFlipX(!this.jugadorpregame.flipX)
+        });
     }
 }
