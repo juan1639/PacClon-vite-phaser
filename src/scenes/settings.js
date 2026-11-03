@@ -32,14 +32,12 @@ export class Settings
 
     static pacman = {
         iniX: 9,
-        iniY: 4,
-        vel: 4
+        iniY: 4
     };
 
     static pacmanPregame = {
         iniX: -4,
-        iniY: 2,
-        vel: 4
+        iniY: 2
     };
 
     static fantasmasIniXY = {
@@ -105,28 +103,6 @@ export class Settings
         fantasmas: 50,
         textos: 60
     };
-
-    static array_laberinto = [
-        [9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9],
-        [9,5,1,1,1,1,1,1,1,9,1,1,1,1,1,1,1,5,9],
-        [9,1,9,9,1,9,9,9,1,9,1,9,9,9,1,9,9,1,9],
-    
-        [9,1,9,9,1,9,9,9,1,9,1,9,9,9,1,9,9,1,9],
-        [9,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,9],
-        [9,1,9,9,1,9,1,9,9,9,9,9,1,9,1,9,9,1,9],
-    
-        [9,1,1,1,1,9,1,1,1,9,1,1,1,9,1,1,1,1,9],
-        [9,9,9,9,1,9,9,9,1,9,1,9,9,9,1,9,9,9,9],
-        [9,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,9],
-    
-        [9,1,9,9,1,9,1,9,1,9,1,9,1,9,1,9,9,1,9],
-        [9,1,9,9,1,9,1,9,1,9,1,9,1,9,1,9,9,1,9],
-        [0,1,1,1,1,9,1,1,1,1,1,1,1,9,1,1,1,1,0],
-    
-        [9,1,9,9,1,9,1,9,9,9,9,9,1,9,1,9,9,1,9],
-        [9,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,9],
-        [9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9],
-    ];
 
     // ------- Getters ---------
     static getPuntos()
@@ -255,11 +231,6 @@ export class Settings
         Settings.fantasmasScary.intermitente = bool;
     }
 
-    static setFantasmasScaryDuracion(tiempo)
-    {
-        Settings.fantasmasScary.duracion = tiempo;
-    }
-
     static setFantasmasBonusInc(valor)
     {
         Settings.fantasmasBonusInc.contador = valor;
@@ -273,24 +244,5 @@ export class Settings
     static setBotonesYcruceta(bool)
     {
         Settings.botonesYcruceta = bool;
-    }
-
-    static setScreen(w, h, bx, by)
-    {
-        Settings.screen.width = w;
-        Settings.screen.height = h;
-        Settings.screen.escBoundsX = bx;
-        Settings.screen.escBoundsY = by;
-    }
-
-    static setDepth(fondo, puntitos, pared, item, jugador, fantasmas, textos)
-    {
-        Settings.depth.fondo = fondo;
-        Settings.depth.puntitos = puntitos;
-        Settings.depth.pared = pared;
-        Settings.depth.item = item;
-        Settings.depth.jugador = jugador;
-        Settings.depth.fantasmas = fantasmas;
-        Settings.depth.textos = textos;
     }
 }

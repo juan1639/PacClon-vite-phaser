@@ -55,8 +55,6 @@ export class Cerezas
             duration: 2000,
             repeat: -1
         });
-
-        console.log(this.cerezas);
     }
 
     update()

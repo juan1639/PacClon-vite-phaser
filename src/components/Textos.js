@@ -14,7 +14,6 @@ export class Textos
         const excepcionesString = excepciones.map(excepcion => excepcion.toString());
         excepcionesString.push(' Congratulations! ');
         excepcionesString.push(' Level Up! ');
-        console.log(excepcionesString);
 
         const {
             x, y, txt,
@@ -35,14 +34,9 @@ export class Textos
         this.texto.setOrigin(origin[0], origin[1]);
         this.texto.setStroke(stroke, sizeStroke);
         this.texto.setShadow(shadowOsx, shadowOsy, shadowColor, 2, bool1, bool2);
-        //#de77ae
-
-        // if (!excepcionesString.includes(txt)) this.texto.setX(centrar_txt(this.texto, args[12] * args[13]));
 
         this.decremento_alpha(txt, excepcionesString);
         this.elastic(txt, elastic, dura);
-
-        console.log(this.texto);
     }
 
     decremento_alpha(txt, excepcionesString)

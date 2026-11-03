@@ -1,18 +1,42 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
     <head>
         <meta charset="UTF-8" />
-        <link rel="icon" type="image/png" href="/favicon.png" />
+
+        <!-- Política de seguridad (GitHub Pages no permite cabeceras HTTP propias).
+             Se permite 'unsafe-inline' solo en estilos porque Phaser/Vite los inyectan
+             por JS. No se necesita 'unsafe-eval': Phaser no usa eval en navegadores
+             modernos (su único new Function está tras la comprobación de globalThis). -->
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'"
+        />
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        
+        <meta name="description" content="PacClon: clon del clásico Pac-Man de 1980 hecho con Phaser 3 y Vite. Juega con teclado o con controles táctiles." />
+        <meta name="theme-color" content="#000000" />
+        <meta name="color-scheme" content="dark" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+        <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="stylesheet" href="/style.css">
-        <title>PacClon-vite-phaser</title>
+        <title>PacClon — clon de Pac-Man con Phaser</title>
     </head>
 
     <body>
+        <noscript>
+            <p class="no-js">Este juego necesita JavaScript para funcionar. Actívalo y recarga la página.</p>
+        </noscript>
+
         <div id="app">
             <div id="game-container"></div>
         </div>
+
+        <!-- Texto alternativo para lectores de pantalla -->
+        <p class="sr-only">
+            PacClon es un juego arcade. Se controla con las flechas del teclado o con los controles táctiles en pantalla.
+        </p>
+
         <script type="module" src="src/main.js"></script>
     </body>
 </html>

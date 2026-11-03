@@ -64,7 +64,5 @@ export class Congratulations extends Phaser.Scene
     this.timeline.play();
 
     play_sonidos(this.sonido_intermision, false, 0.8);
-
-    console.log(this.txt);
   }
 }

@@ -1,15 +1,60 @@
+html,
+body {
+    height: 100%;
+}
+
 body {
     margin: 0;
     padding: 0;
     color: rgba(255, 255, 255, 0.87);
     background-color: #000000;
+    overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 #app {
     width: 100%;
     height: 100vh;
+    /* Unidades dinámicas: evita el hueco de la barra de Safari/Chrome en móvil */
+    height: 100dvh;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Evita scroll/zoom accidental mientras se usan los controles táctiles */
+    touch-action: none;
+}
+
+/* Phaser (modo FIT) escala el canvas al tamaño del contenedor:
+   necesita medidas reales para no caer al fallback de "ventana". */
+#game-container {
+    width: 100%;
+    height: 100%;
+}
+
+canvas {
+    display: block;
+}
+
+/* Aviso cuando JavaScript está desactivado */
+.no-js {
+    margin: 0;
+    padding: 1rem;
+    text-align: center;
+}
+
+/* Texto solo para lectores de pantalla */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }

@@ -26,9 +26,6 @@ export class Marcador
         });
 
         this.marcador.setStroke('#ee9011', 16).setShadow(2, 2, '#111111', 2, false, true);
-        //#de77ae
-
-        console.log(this.marcador);
     }
 
     update(txt, valor)

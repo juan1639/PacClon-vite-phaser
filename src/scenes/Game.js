@@ -39,7 +39,7 @@ export class Game extends Phaser.Scene
     Settings.setFantasmasScary(false);
     Settings.setFantasmasBonusInc(0);
 
-    this.set_pausaInicial(4300);
+    this.set_pausaInicial(Settings.pausa.inicial);
 
     this.laberinto = new Laberinto(this);
     this.puntito = new Puntitos(this);
@@ -90,7 +90,6 @@ export class Game extends Phaser.Scene
     this.iconogamepad.create();
 
     this.cameras.main.startFollow(this.jugador.get());
-    // this.cameras.main.followOffset.set(0, 0);
 
     this.crear_colliders();
   }
@@ -155,7 +154,6 @@ export class Game extends Phaser.Scene
     ]);
 
     this.timeline.play();
-    console.log(this.txtpreparado);
   }
 
   texto_enhorabuena()
@@ -223,7 +221,6 @@ export class Game extends Phaser.Scene
     this.mapa_controles = this.cameras.add(x, y, ancho, alto).setZoom(0.9).setName('view-controls').setAlpha(0.7).setOrigin(0, 0);
     this.mapa_controles.scrollX = scrollX;
     this.mapa_controles.scrollY = scrollY;
-    // console.log(this.mapa_controles);
   }
   
   set_cameras_marcadores()
@@ -233,7 +230,6 @@ export class Game extends Phaser.Scene
     this.mapa_scores = this.cameras.add(x, y, ancho, alto).setZoom(0.6).setName('view-scores').setAlpha(1).setOrigin(0, 0);
     this.mapa_scores.scrollX = scrollX;
     this.mapa_scores.scrollY =scrollY;
-    // console.log(this.mapa_scores);
   }
 
   instanciar_marcadores()

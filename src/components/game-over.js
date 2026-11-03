@@ -53,8 +53,6 @@ export class GameOver
     this.check_newRecord();
   }
 
-  update() {}
-
   check_newRecord()
   {
     if (Settings.getPuntos() >= Settings.getRecord()) {

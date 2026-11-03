@@ -85,9 +85,5 @@ export class MainMenu extends Scene
 
         this.sonido_intermision.play();
         this.sonido_intermision.volume = 0.5;
-
-        console.log(this.txt);
     }
-
-    update() {}
 }

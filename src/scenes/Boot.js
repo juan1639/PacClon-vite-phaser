@@ -34,7 +34,5 @@ export class Boot extends Scene
         this.txt.create();
         
         this.input.on('pointerdown', () => this.scene.start('Preloader'));
-
-        console.log(this.txt);
     }
 }

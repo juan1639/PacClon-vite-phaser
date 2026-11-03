@@ -27,8 +27,6 @@ export class Puntitos
                 }
             }
         }
-
-        console.log(this.puntito);
     }
 
     get()
@@ -85,8 +83,6 @@ export class PuntitosGordos
                 null, false, this.relatedScene
             );
         });
-
-        console.log(this.puntitosgordos);
     }
 
     get()

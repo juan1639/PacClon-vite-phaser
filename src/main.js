@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { Boot } from './scenes/Boot';
 import { Game } from './scenes/Game';
-import { Congratulations } from './scenes/congratulations';
+import { Congratulations } from './scenes/Congratulations';
 import { MainMenu } from './scenes/MainMenu';
 import { Preloader } from './scenes/Preloader';
 

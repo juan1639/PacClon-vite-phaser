@@ -52,8 +52,6 @@ export class Jugador
         this.jugador.anims.play('le-ri-up-do', true);
 
         this.controles = this.relatedScene.input.keyboard.createCursorKeys();
-
-        console.log(this.jugador);
     }
 
     update()
@@ -117,8 +115,6 @@ export class Jugador
             if (this.jugador.x > Laberinto.array_laberinto[0].length * Settings.tileXY.x && direcc[this.direccion][0] > 0) this.jugador.x = -Settings.tileXY.x;
             if (this.jugador.x < -Settings.tileXY.x && direcc[this.direccion][0] < 0) this.jugador.x = (Laberinto.array_laberinto[0].length - 1) * Settings.tileXY.x;
         }
-
-        // console.log(this.jugador.x, this.jugador.y);
     }
 
     get()
@@ -148,8 +144,6 @@ export class JugadorDies
             duration: 1000,
             repeat: 2
         });
-
-        console.log(this.jugadordies);
     }
 
     get()
@@ -187,8 +181,6 @@ export class JugadorShowVidas
         {
             vida.setOrigin(0.5, 0).setScale(1, 0.7).setBlendMode(Phaser.BlendModes.ADD);
         });
-
-        console.log(this.jugadorshowvidas);
     }
 
     get()
@@ -234,7 +226,5 @@ export class JugadorPreGame
         });
 
         setInterval(() => {this.jugadorpregame.setFlipX(!this.jugadorpregame.flipX)}, duracionTotal);
-
-        console.log(this.jugadorpregame);
     }
 }

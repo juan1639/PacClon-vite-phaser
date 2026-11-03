@@ -44,8 +44,6 @@ export class Laberinto
                 this.elegir_tilesNiveles(valor, nivel, i, ii);
             }
         }
-
-        console.log(this.tile);
     }
 
     static check_colision(x, y)

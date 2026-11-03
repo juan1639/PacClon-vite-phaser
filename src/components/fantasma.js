@@ -78,8 +78,6 @@ export class Fantasma
 
             fant.anims.play(`anim${index}0`, true);
         });
-
-        console.log(this.fantasmas);
     }
 
     update()
@@ -214,7 +212,6 @@ export class Fantasma
     duracion_scary()
     {
         let duracion = Settings.getFantasmasScaryDuracion() - Settings.getNivel() * 900;
-        console.log(duracion);
 
         if (duracion < 1900) return 1900;
         return duracion;
@@ -297,8 +294,6 @@ export class FantasmaPreGame
 
             setInterval(() => {fant.setFlipX(!fant.flipX)}, duracionTotal);
         });
-
-        console.log(this.fantasmaspregame);
     }
 }
 
@@ -344,8 +339,6 @@ export class OjosFantasma
 
             ojos.anims.play(`anim50`, true);
         });
-
-        console.log(this.ojosfantasma);
     }
 
     update()

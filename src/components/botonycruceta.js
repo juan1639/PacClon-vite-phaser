@@ -37,8 +37,6 @@ export class CrucetaDireccion
         this.boton.on('pointerup', () => {
             this.isDown = false;
         });
-
-        console.log(this.boton);
     }
     
     get()
@@ -85,8 +83,6 @@ export class IconoGamePad
         this.iconogamepad.on('pointerup', () => {
             this.isDown = false;
         });
-
-        console.log(this.iconogamepad);
     }
     
     get()

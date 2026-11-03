@@ -4,7 +4,7 @@ Recreación del juego clásico arcade Pacman de 1980, usando la librería Phaser
 
 https://juan1639.github.io/PacClon-vite-phaser
 
-<img src="./public/miniatura-pacClon-phaser-pre.png"/>
+<img src="./miniatura-pacClon-phaser-pre.png"/>
 
 # Phaser Vite Template
 
@@ -14,8 +14,8 @@ This is a Phaser 3 project template that uses Vite for bundling. It supports hot
 
 This template has been updated for:
 
-- [Phaser 3.80.1](https://github.com/phaserjs/phaser)
-- [Vite 5.1.4](https://github.com/vitejs/vite)
+- [Phaser 3.90.0](https://github.com/phaserjs/phaser)
+- [Vite 5.4.21](https://github.com/vitejs/vite)
 
 ![screenshot](screenshot.png)
 
@@ -30,6 +30,13 @@ This template has been updated for:
 | `npm install` | Install project dependencies |
 | `npm run dev` | Launch a development web server |
 | `npm run build` | Create a production build in the `dist` folder |
+| `npm run preview` | Serve the production build locally |
+| `npm run deploy` | Publish `dist/` to GitHub Pages (builds first) |
+
+## Controls
+
+- **Keyboard:** arrow keys to move, and the on-screen fullscreen button.
+- **Touch:** tap the gamepad icon to show the on-screen D-pad, then use it to move.
 
 ## Writing Code
 
